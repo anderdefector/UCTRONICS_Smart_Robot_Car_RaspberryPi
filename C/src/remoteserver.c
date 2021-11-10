@@ -286,7 +286,6 @@ void *fun1(void *arg) {
   unsigned char cnt = 0;
   float dis = 0, temp_min = 0, temp_max = 0, temp_value = 0, temp = 0;
   while (1) {
-    printf("Estoy en fun1");
     usleep(1);
     temp_min  = temp_max;
     temp_value = temp_max;
@@ -298,7 +297,8 @@ void *fun1(void *arg) {
     }
     dis = (temp_value - temp_max - temp_min);
     temp_value = 0; temp_min = 0; temp_max = 0; temp_value = 0; temp = 0;
-    if (dis > 0 && dis <= 50) {
+    /*Se Ajusta para probar la distancia  valores originales 0 y 50 */
+    if (dis > 5 && dis <= 10) {
       disWarning = 1;
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
@@ -325,7 +325,7 @@ void *fun1(void *arg) {
 void *fun2(void *arg) {
   int IRVal = 0;
   while (1) {
-    printf("Estoy en fun2"); 
+    //printf("Estoy en fun2"); 
     usleep(1);
     if (carstate.trackenable) {
       printf("Come in track mode \n");
