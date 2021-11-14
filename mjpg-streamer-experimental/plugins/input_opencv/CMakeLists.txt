@@ -8,6 +8,7 @@ MJPG_STREAMER_PLUGIN_OPTION(input_opencv "OpenCV input plugin"
 
 if (PLUGIN_INPUT_OPENCV)
     include_directories(${OpenCV_INCLUDE_DIRS})
+    message(STATUS "OpenCV_INCLUDE_DIRS = ${OpenCV_INCLUDE_DIRS}")
 
     MJPG_STREAMER_PLUGIN_COMPILE(input_opencv input_opencv.cpp)
     
@@ -15,6 +16,11 @@ if (PLUGIN_INPUT_OPENCV)
     
     add_subdirectory(filters/cvfilter_cpp)
     add_subdirectory(filters/cvfilter_py)
+
+else()
+
+    message(STATUS "No hay")
+
     
 endif()
 
