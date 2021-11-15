@@ -7,6 +7,7 @@ MJPG_STREAMER_PLUGIN_OPTION(input_opencv "OpenCV input plugin"
                             ONLYIF OpenCV_FOUND)
 
 if (PLUGIN_INPUT_OPENCV)
+    message(STATUS "si hay")
     include_directories(${OpenCV_INCLUDE_DIRS})
     message(STATUS "OpenCV_INCLUDE_DIRS = ${OpenCV_INCLUDE_DIRS}")
 
