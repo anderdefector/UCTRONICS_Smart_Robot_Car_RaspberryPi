@@ -154,131 +154,30 @@ int main(int argc, char *argv[])
   irInit();
   myPWMInit();
   GRBInit();
-  pthread_t t1, t2;
+  //pthread_t t1, t2;
   //creat two thread
-  pthread_create(&t1, NULL, fun1, NULL);
-  pthread_create(&t2, NULL, fun2, NULL);
+  //pthread_create(&t1, NULL, fun1, NULL);
+  //pthread_create(&t2, NULL, fun2, NULL);
   for (pulsenum = 0; pulsenum < 10; pulsenum++) {
-    servoCtrl(servo_1, 1490);
+    servoCtrl(servo_1, 1390);
     servoCtrl(servo_2, 1090);
   }
-  sockfd = socket(AF_INET, SOCK_STREAM, 0);
-  if (sockfd < 0) {
-    perror("ERROR opening socket");
-    exit(1);
-  }
-  /* Initialize socket structure */
-  bzero((char *) &serv_addr, sizeof(serv_addr));
-  portno = 2001;
-  serv_addr.sin_family = AF_INET;
-  serv_addr.sin_addr.s_addr = INADDR_ANY;
-  serv_addr.sin_port = htons(portno);
 
-  /*Add support port reuse*/
-    if ((setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on))) < 0)
-    {
-      perror("setsockopt failed");
-      exit(EXIT_FAILURE);
-    }
-    /* Now bind the host address using bind() call.*/
-    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-      perror("ERROR on binding");
-      exit(1);
-    }
- 
-    /* Add support reconnection */
-  sa.sa_handler = SIG_IGN;
-  sigaction( SIGPIPE, &sa, 0 );
-  /* Now start listening for the clients, here process will
-    go in sleep mode and will wait for the incoming connection
-  */
-  while (1) {
-    listen(sockfd, 5);
-    clilen = sizeof(cli_addr);
-    printf("Hola Andres, esperando conexión. \r\n");
-    client_Connected = 0;
-    clearFlag();
-    stop();
-    BEEP_OPEN();
-    /* Accept actual connection from the client */
-    newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, (void *) &clilen);
-    if (newsockfd < 0) {
-      perror("ERROR on accept");
-      //exit(1);
-    }
-    /* If connection is established then start communicating */
-    printf("Conexión establecida.\r\n");
+  printf("Hola Andres, vamos a hacer pruebas. \r\n");
+  clearFlag();
+  stop();
+  BEEP_OPEN();
+  printf("Conexión establecida.\r\n");
 
-    sleep(0.5);
-    GRB_work(3, getColour, getBrightness);
-    n = write(newsockfd, "{\"version\":2}", 13);
-    client_Connected = 1;
-    sleep(0.001);
-    bzero(&buffer, BUFFER_SIZE);
-    while ((n = read(newsockfd, &buffer, BUFFER_SIZE)) > 0)
-    {
-      if (buffer[0] == 's') { //0x73
-        baseSpeed = buffer[1];
-        addLeftSpeed = buffer[2];
-        addRightSpeed = buffer[3];
-        speedVal_1 = 10000 * ((buffer[1] + buffer[2]) / 255.0);
-        speedVal_3 = 10000 * ((buffer[1] + buffer[2]) / 255.0);
+  sleep(0.5);
+  GRB_work(3, getColour, getBrightness);
+   printf("Prueba pruebas. \n");
+  GRB_work(3, receive_colour_table[2], getBrightness);
+   sleep(0.5);
 
-        speedVal_2 = 10000 * ((buffer[1] + buffer[3]) / 255.0);
-        speedVal_4 = 10000 * ((buffer[1] + buffer[3]) / 255.0);
+  
 
-      } else if (buffer[0] == 'c') { //0x63
-        getColour = (buffer[1] << 16) | (buffer[2] << 8) | buffer[3];
-        getBrightness = buffer[4];
-        GRB_work(3, getColour, getBrightness);
-		if(readNowTime){
-			readNowTime = 0;
-			previous_time = get_pwm_timestamp();	
-		}	
-	  now_time = get_pwm_timestamp();
-      time_stamp = now_time - previous_time;
-      if (time_stamp <2000000) {
-		   printf("set current direction\r\n");
-		  receive_colour_table[getColIndex] = getColour;
-      }else{
-		  readNowTime = 1;
-		  printf("set next direction\r\n");
-		  getColIndex = (1+getColIndex)%4;
-		  receive_colour_table[getColIndex] = getColour;
-		  previous_time = get_pwm_timestamp();
-	  }  
-		
-      } else if (buffer[0] == 'v') {
-        printf("Reveive value %d\n", buffer[0]);
-        write(newsockfd, "{\"version\":2}", 13);
-      }
-      else {
-	  	for(count = 0; count <n; count ++){
-			printf("receive data %d\r\n",buffer[count]);
-		}
-	  	if(buffer[0]==0xFF && buffer[1] == 0x55){
-				for (count = 2; count < n; count ++) {
-					 PhaseScratchCmd(buffer[count]);
-					}
-		}else{
-			for (count = 0; count < n; count ++) {
-					  updateCarState(buffer[count]);
-					  updateCarMotion();
-					}
-		}
-      }
-      bzero(&buffer, BUFFER_SIZE);
-    }
-    stop();
-    clearFlag();
-    if (n < 0) {
-      printf("Connection exception!\n");
-      //break;
-    }
-  }
-  client_Connected = 0;
-  close(sockfd);
-  printf("ERROR\r\n");
+
   return 0;
 }
 
