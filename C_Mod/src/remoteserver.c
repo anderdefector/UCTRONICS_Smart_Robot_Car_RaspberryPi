@@ -177,10 +177,13 @@ int main(int argc, char *argv[])
     GRB_work(3, receive_colour_table[2], getBrightness);
     distancia = disMeasure();
     printf("Distancia al objeto : %f \n", distancia);
-    if(distancia > 4.0 && distancia < 10 ){
+    if(distancia > 3.0 && distancia <  6.0 ){
       printf("Hay objeto! \n");
+      GRB_MultiColour_work(3, 100 );
+      stop();
     }else{
       printf("Avanza \n");
+      go_forward();
     }
   }
 
