@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
   pthread_create(&t1, NULL, fun1, NULL);
   pthread_create(&t2, NULL, fun2, NULL);
   for (pulsenum = 0; pulsenum < 10; pulsenum++) {
-    servoCtrl(servo_1, 1490);
+    servoCtrl(servo_1, 1390);
     servoCtrl(servo_2, 1090);
   }
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -300,6 +300,7 @@ void *fun1(void *arg) {
     temp_value = 0; temp_min = 0; temp_max = 0; temp_value = 0; temp = 0;
     /*Se Ajusta para probar la distancia  valores originales 0 y 50 */
     if (dis > 5 && dis <= 10) {
+      GRB_work(3, receive_colour_table[1], getBrightness);
       disWarning = 1;
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
@@ -1349,7 +1350,7 @@ void exit_UCTRONICS_Robot_Car(void)
   client_Connected = 0;
   close(sockfd);
   for (pulsenum = 0; pulsenum < 10; pulsenum++) {
-    servoCtrl(servo_1, 1490);
+    servoCtrl(servo_1, 1390);
     servoCtrl(servo_2, 1090);
   }
   digitalWrite(BEEP, LOW);
