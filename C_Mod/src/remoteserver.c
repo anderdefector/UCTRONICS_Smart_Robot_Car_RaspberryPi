@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
   while(1){
     GRB_work(3, receive_colour_table[2], getBrightness);
     distancia = disMeasure();
-    printf("Distancia al objeto : %f", distancia);
+    printf("Distancia al objeto : %f \n", distancia);
   }
 
 
