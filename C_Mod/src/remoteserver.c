@@ -132,6 +132,7 @@ int PhaseScratchCmd(char command);
 */
 int main(int argc, char *argv[])
 {
+  float distancia;
   usleep(10);
   char buffer[BUFFER_SIZE]; 
   struct sockaddr_in serv_addr, cli_addr;
@@ -172,10 +173,11 @@ int main(int argc, char *argv[])
   sleep(0.5);
   GRB_work(3, getColour, getBrightness);
    printf("Prueba pruebas. \n");
-  GRB_work(3, receive_colour_table[2], getBrightness);
-   sleep(0.5);
-
-  
+  while(1){
+    GRB_work(3, receive_colour_table[2], getBrightness);
+    distancia = disMeasure();
+    printf("Distancia al objeto : %f", distancia);
+  }
 
 
   return 0;
