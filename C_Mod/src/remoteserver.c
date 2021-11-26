@@ -30,7 +30,6 @@
 int baseSpeed, addLeftSpeed, addRightSpeed;
 unsigned long getColour = 0xFF0000;
 unsigned int getBrightness = 100;
-//Originales 5000
 static int speedVal_1 = 2000;
 static int speedVal_2 = 2000;
 static int speedVal_3 = 2000;
@@ -585,110 +584,9 @@ int IR_updateCarState(int command) {
   }
   return 0;
 }
-
-
-int PhaseScratchCmd(char command){
-	static int angleA = 1140;
-	static int angleB = 630;
-
-	switch (command) {
-    case 1: // go forward
-      go_forward();
-      GRB_work(3, receive_colour_table[2], getBrightness);
-      break;
-    case 2: //go backward
-      if (!disWarning) {
-       	go_back();
-        GRB_work(3, receive_colour_table[0], getBrightness);
-      }
-    else
-		stop();
-	  carstate.trackenable = 0;
-	  carstate.autoAvoid = 0;
-      break;
-    case 3: //go left
-      go_left();
-      GRB_work(3, receive_colour_table[3], getBrightness);
-      carstate.trackenable = 0;
-      carstate.autoAvoid = 0;
-      break;
-    case 4: //go right
-      go_right();
-      GRB_work(3, receive_colour_table[1], getBrightness);
-      carstate.trackenable = 0;
-      carstate.autoAvoid = 0;
-      break;
-    case 5: //stop
-      stop();
-      carstate.trackenable = 0;
-      carstate.autoAvoid = 0;
-      break;
-    case 7: /* servo left */
-       if (angleA < 2300)
-      	angleA = angleA + 50;
-   	   else
-      	 angleA = 2300;
-       servoCtrl(servo_1,  angleA);
-     break;
-    case 8: /*servo right */
-      if (angleA > 300)
-      angleA = angleA - 50;
-     else
-      angleA = 300;
-     servoCtrl(servo_1,  angleA);
-     break;
-    case 9: /* servo up */
-      if (angleB > 300)
-      	angleB = angleB - 50;
-      else
-      	angleB = 300;
-      servoCtrl(servo_2,  angleB);
-    break;
-    case 10: /* servo down */
-     if (angleB < 1160)
-      	angleB = angleB + 50;
-     else
-      angleB = 1160;
-     servoCtrl(servo_2,  angleB);
-    break;
-    case 11: /* enable track */
-      carstate.trackenable = 1;
-      break;
-    case 12: /* disable track */
-      carstate.trackenable = 0;
-      break;
-    case 13: 
-      carstate.speedUp = 1;
-      break;
-    case 14: 
-      carstate.speedDown = 1;
-      break;
-    case 15: /* disable track */
-      digitalWrite(BEEP, HIGH);
-      break;
-    case 16: /* disable track */
-      digitalWrite(BEEP, LOW);
-      break;
-    case 17: /*automatic avoidance*/
-      carstate.autoAvoid = 1;
-      break;
-    case 18: /*stop automatic avoidance*/
-      carstate.autoAvoid = 0;
-      break;
-    case 19: /*turn off the robot car*/
-      poweroffFlag = 1;
-      exit_UCTRONICS_Robot_Car();
-      printf("power off\n");
-      system("sudo poweroff");
-      break;
-  }
-  return 0;
-}
-
 /* Updates the struct MotionState of the car.
 */
 int updateCarState(char command) {
-  printf("Estoy en UpdateCarstate");
   switch (command) {
     case 0: /* left */
       carstate.left = 1;
@@ -774,10 +672,10 @@ int updateCarState(char command) {
       carstate.autoAvoid = 0;
       break;
     case 19: /*turn off the robot car*/
-      //poweroffFlag = 1;
-      //exit_UCTRONICS_Robot_Car();
-      //printf("power off\n");
-      //system("sudo poweroff");
+      poweroffFlag = 1;
+      exit_UCTRONICS_Robot_Car();
+      printf("power off\n");
+      system("sudo poweroff");
 
       break;
   }
@@ -1349,8 +1247,8 @@ void exit_UCTRONICS_Robot_Car(void)
   client_Connected = 0;
   close(sockfd);
   for (pulsenum = 0; pulsenum < 10; pulsenum++) {
-    servoCtrl(servo_1, 1490);
-    servoCtrl(servo_2, 1090);
+    servoCtrl(servo_1, 1300);
+    servoCtrl(servo_2, 1300);
   }
   digitalWrite(BEEP, LOW);
   GRB_work(3, 0, 0 );
