@@ -31,10 +31,10 @@ int baseSpeed, addLeftSpeed, addRightSpeed;
 unsigned long getColour = 0xFF0000;
 unsigned int getBrightness = 100;
 //Originales 5000
-static int speedVal_1 = 2000;
-static int speedVal_2 = 2000;
-static int speedVal_3 = 2000;
-static int speedVal_4 = 2000;
+static int speedVal_1 = 5000;
+static int speedVal_2 = 5000;
+static int speedVal_3 = 5000;
+static int speedVal_4 = 5000;
 
 
 struct motionstate carstate = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
