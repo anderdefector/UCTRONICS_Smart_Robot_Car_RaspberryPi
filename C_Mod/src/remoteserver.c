@@ -821,10 +821,11 @@ void avoidance(void)
 {
 
   while (1) {
+    /*
     if (!(carstate.autoAvoid)) {
       stop();
       break;
-    }
+    }*/
     mySoftPwmWrite1(speedVal_1);
     mySoftPwmWrite2(speedVal_2);
     mySoftPwmWrite3(speedVal_3);
