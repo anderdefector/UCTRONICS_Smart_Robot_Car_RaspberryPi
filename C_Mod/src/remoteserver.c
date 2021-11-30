@@ -173,17 +173,19 @@ int main(int argc, char *argv[])
   sleep(0.5);
     GRB_work(3, getColour, getBrightness);
     printf("Prueba pruebas. \n");
+    
+  while(1){
+   
+    distancia = disMeasure();
+    printf("Distancia al objeto : %f \n", distancia);
     mySoftPwmWrite1(speedVal_1);
     mySoftPwmWrite2(speedVal_2);
     mySoftPwmWrite3(speedVal_3);
     mySoftPwmWrite4(speedVal_4);
-  while(1){
-    GRB_work(3, receive_colour_table[2], getBrightness);
-    distancia = disMeasure();
-    printf("Distancia al objeto : %f \n", distancia);
     if(distancia > 3.0 && distancia <  6.0 ){
       printf("Hay objeto! \n");
       GRB_MultiColour_work(3, 100 );
+      GRB_work(3, receive_colour_table[2], getBrightness);
       stop();
     }else{
       printf("Avanza \n");
