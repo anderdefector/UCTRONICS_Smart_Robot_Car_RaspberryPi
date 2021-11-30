@@ -208,10 +208,10 @@ void *fun1(void *arg) {
   while (1) {
     usleep(1);
     dis = disMeasure();
-    printf("Distancia al objeto : %f \n", distancia);
+    printf("Distancia al objeto : %f \n", dis);
     if (dis <  10.0) {
       disWarning = 1;
-      printf("Hay objeto: %f \n", distancia);
+      printf("Hay objeto: \n");
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
           stop();
