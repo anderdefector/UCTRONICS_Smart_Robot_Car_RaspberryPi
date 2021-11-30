@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
   //pthread_t t1, t2;
   //creat two thread
   //pthread_create(&t1, NULL, fun1, NULL);
-  pthread_create(&t2, NULL, fun2, NULL);
+  //pthread_create(&t2, NULL, fun2, NULL);
   for (pulsenum = 0; pulsenum < 10; pulsenum++) {
     servoCtrl(servo_1, 1390);
     servoCtrl(servo_2, 1090);
