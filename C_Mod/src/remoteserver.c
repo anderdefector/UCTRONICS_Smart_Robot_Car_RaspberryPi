@@ -212,7 +212,7 @@ void *fun1(void *arg) {
     if (dis <  10.0) {
       disWarning = 1;
       printf("Hay objeto: \n");
-      beepWarning();
+      //beepWarning();
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
           stop();
@@ -220,17 +220,6 @@ void *fun1(void *arg) {
 
       }
     } else disWarning = 0;
-    /**
-    if (!poweroffFlag) {
-      beepWarning();
-    }
-	if(servoBeep){
-		servoBeep = 0;
-		digitalWrite(BEEP, HIGH);
-		delay(100);
-		digitalWrite(BEEP, LOW);
-	}
-	**/
 
   }
 }
@@ -238,28 +227,15 @@ void *fun1(void *arg) {
 void *fun2(void *arg) {
   int IRVal = 0;
   while (1) {
-    //printf("Estoy en fun2"); 
+    printf("Estoy en fun2"); 
     usleep(1);
-    if (carstate.trackenable) {
-      printf("Come in track mode \n");
-      trackModeWork();
-    }
-    if (carstate.autoAvoid) {
-      avoidance();
-    }
-    if (done == 1) {
-      done = 0;
-      IRVal = buf[2]; IRVal = IRVal << 8;
-      IRVal = IRVal | buf[3];
-      IR_updateCarState(IRVal);
-      IR_updateCarMotion();
-      IRVal = 0;
-    }
+    //if (carstate.autoAvoid) {
+    avoidance();
+    
     mySoftPwmWrite1(speedVal_1);
     mySoftPwmWrite2(speedVal_2);
     mySoftPwmWrite3(speedVal_3);
     mySoftPwmWrite4(speedVal_4);
-    if (!poweroffFlag)  getLedSta();
   }
 
 }
@@ -854,6 +830,7 @@ void avoidance(void)
     mySoftPwmWrite3(speedVal_3);
     mySoftPwmWrite4(speedVal_4);
     if (disWarning || turnLeftFlag||turnBackFlag) {
+      printf("Evadiendo\n");
       turn();
     } else {
       printf("Go forward\n");
