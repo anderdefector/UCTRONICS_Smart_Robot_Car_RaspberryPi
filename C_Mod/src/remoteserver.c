@@ -169,6 +169,10 @@ int main(int argc, char *argv[])
   stop();
   BEEP_OPEN();
   printf("Conexión establecida.\r\n");
+  mySoftPwmWrite1(speedVal_1);
+  mySoftPwmWrite2(speedVal_2);
+  mySoftPwmWrite3(speedVal_3);
+  mySoftPwmWrite4(speedVal_4);
 
   sleep(0.5);
     GRB_work(3, getColour, getBrightness);
