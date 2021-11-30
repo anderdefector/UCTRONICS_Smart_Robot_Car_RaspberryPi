@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
   while(1){
     
     //distancia = disMeasure();
-    printf("Hola");
+    printf("Hola\n");
     /*
     ySoftPwmWrite1(speedVal_1);
     mySoftPwmWrite2(speedVal_2);
@@ -212,6 +212,7 @@ void *fun1(void *arg) {
     if (dis <  10.0) {
       disWarning = 1;
       printf("Hay objeto: \n");
+      beepWarning();
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
           stop();
@@ -219,7 +220,7 @@ void *fun1(void *arg) {
 
       }
     } else disWarning = 0;
-
+    /**
     if (!poweroffFlag) {
       beepWarning();
     }
@@ -229,7 +230,7 @@ void *fun1(void *arg) {
 		delay(100);
 		digitalWrite(BEEP, LOW);
 	}
-	
+	**/
 
   }
 }
