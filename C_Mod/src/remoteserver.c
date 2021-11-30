@@ -178,10 +178,10 @@ int main(int argc, char *argv[])
    
     distancia = disMeasure();
     printf("Distancia al objeto : %f \n", distancia);
-    mySoftPwmWrite1(speedVal_1);
-    mySoftPwmWrite2(speedVal_2);
-    mySoftPwmWrite3(speedVal_3);
-    mySoftPwmWrite4(speedVal_4);
+    //mySoftPwmWrite1(speedVal_1);
+    //mySoftPwmWrite2(speedVal_2);
+    //mySoftPwmWrite3(speedVal_3);
+    //mySoftPwmWrite4(speedVal_4);
     if(distancia > 3.0 && distancia <  6.0 ){
       printf("Hay objeto! \n");
       GRB_MultiColour_work(3, 100 );
