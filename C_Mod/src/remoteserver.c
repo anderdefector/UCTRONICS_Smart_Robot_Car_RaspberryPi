@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
   //pthread_t t1, t2;
   //creat two thread
   //pthread_create(&t1, NULL, fun1, NULL);
-  //pthread_create(&t2, NULL, fun2, NULL);
+  pthread_create(&t2, NULL, fun2, NULL);
   for (pulsenum = 0; pulsenum < 10; pulsenum++) {
     servoCtrl(servo_1, 1390);
     servoCtrl(servo_2, 1090);
@@ -169,10 +169,10 @@ int main(int argc, char *argv[])
   stop();
   BEEP_OPEN();
   printf("Conexión establecida.\r\n");
-  mySoftPwmWrite1(speedVal_1);
-  mySoftPwmWrite2(speedVal_2);
-  mySoftPwmWrite3(speedVal_3);
-  mySoftPwmWrite4(speedVal_4);
+  //mySoftPwmWrite1(speedVal_1);
+  //mySoftPwmWrite2(speedVal_2);
+  //mySoftPwmWrite3(speedVal_3);
+  //mySoftPwmWrite4(speedVal_4);
 
   sleep(0.5);
     GRB_work(3, getColour, getBrightness);
@@ -182,10 +182,10 @@ int main(int argc, char *argv[])
    
     distancia = disMeasure();
     printf("Distancia al objeto : %f \n", distancia);
-    //mySoftPwmWrite1(speedVal_1);
-    //mySoftPwmWrite2(speedVal_2);
-    //mySoftPwmWrite3(speedVal_3);
-    //mySoftPwmWrite4(speedVal_4);
+    mySoftPwmWrite1(speedVal_1);
+    mySoftPwmWrite2(speedVal_2);
+    mySoftPwmWrite3(speedVal_3);
+    mySoftPwmWrite4(speedVal_4);
     if(distancia > 3.0 && distancia <  6.0 ){
       printf("Hay objeto! \n");
       GRB_MultiColour_work(3, 100 );
