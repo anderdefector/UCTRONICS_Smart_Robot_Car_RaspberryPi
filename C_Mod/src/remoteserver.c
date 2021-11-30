@@ -171,8 +171,12 @@ int main(int argc, char *argv[])
   printf("Conexión establecida.\r\n");
 
   sleep(0.5);
-  GRB_work(3, getColour, getBrightness);
-   printf("Prueba pruebas. \n");
+    GRB_work(3, getColour, getBrightness);
+    printf("Prueba pruebas. \n");
+    mySoftPwmWrite1(speedVal_1);
+    mySoftPwmWrite2(speedVal_2);
+    mySoftPwmWrite3(speedVal_3);
+    mySoftPwmWrite4(speedVal_4);
   while(1){
     GRB_work(3, receive_colour_table[2], getBrightness);
     distancia = disMeasure();
