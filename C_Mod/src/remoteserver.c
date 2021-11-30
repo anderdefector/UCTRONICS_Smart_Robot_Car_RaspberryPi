@@ -155,10 +155,10 @@ int main(int argc, char *argv[])
   irInit();
   myPWMInit();
   GRBInit();
-  //pthread_t t1, t2;
+  pthread_t t1, t2;
   //creat two thread
-  //pthread_create(&t1, NULL, fun1, NULL);
-  //pthread_create(&t2, NULL, fun2, NULL);
+  pthread_create(&t1, NULL, fun1, NULL);
+  pthread_create(&t2, NULL, fun2, NULL);
   for (pulsenum = 0; pulsenum < 10; pulsenum++) {
     servoCtrl(servo_1, 1390);
     servoCtrl(servo_2, 1090);
@@ -179,13 +179,14 @@ int main(int argc, char *argv[])
     printf("Prueba pruebas. \n");
     
   while(1){
-   
-    distancia = disMeasure();
-    printf("Distancia al objeto : %f \n", distancia);
-    mySoftPwmWrite1(speedVal_1);
+    
+    //distancia = disMeasure();
+    printf("Hola");
+    /*
+    ySoftPwmWrite1(speedVal_1);
     mySoftPwmWrite2(speedVal_2);
     mySoftPwmWrite3(speedVal_3);
-    mySoftPwmWrite4(speedVal_4);
+    mySoftPwmWmrite4(speedVal_4);
     if(distancia <  7.0 ){
       printf("Hay objeto! \n");
       beepWarning();      
@@ -194,6 +195,7 @@ int main(int argc, char *argv[])
       printf("Avanza \n");
       go_forward();
     }
+    */
   }
 
 
@@ -205,19 +207,11 @@ void *fun1(void *arg) {
   float dis = 0, temp_min = 0, temp_max = 0, temp_value = 0, temp = 0;
   while (1) {
     usleep(1);
-    temp_min  = temp_max;
-    temp_value = temp_max;
-    for (cnt = 0; cnt < 3; cnt ++ ) {
-      temp = disMeasure(); usleep(1);
-      if (temp_max < temp) temp_max = temp;
-      if (temp_min > temp) temp_min = temp;
-      temp_value += temp;
-    }
-    dis = (temp_value - temp_max - temp_min);
-    temp_value = 0; temp_min = 0; temp_max = 0; temp_value = 0; temp = 0;
-    /*Se Ajusta para probar la distancia  valores originales 0 y 50 */
-    if (dis > 5 && dis <= 10) {
+    dis = disMeasure();
+    printf("Distancia al objeto : %f \n", distancia);
+    if (dis <  10.0) {
       disWarning = 1;
+      printf("Hay objeto: %f \n", distancia);
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
           stop();
