@@ -232,9 +232,10 @@ void *fun2(void *arg) {
     //if (carstate.autoAvoid) {
 
     if(disWarning){
-      printf("Detente");;
+      printf("Detente \n");
       stop();
     }else{
+      printf("Vamonos!!! \n");
       go_forward();
     }
     //avoidance();
