@@ -209,7 +209,7 @@ void *fun1(void *arg) {
     usleep(1);
     dis = disMeasure();
     printf("Distancia al objeto : %f \n", dis);
-    if (dis <  10.0) {
+    if (dis <  20.0) {
       disWarning = 1;
       printf("Hay objeto: \n");
       //beepWarning();
