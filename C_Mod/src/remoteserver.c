@@ -230,7 +230,14 @@ void *fun2(void *arg) {
     printf("Estoy en fun2 \n"); 
     usleep(1);
     //if (carstate.autoAvoid) {
-    avoidance();
+
+    if(disWarning){
+      printf("Detente");;
+      stop();
+    }else{
+      go_forward();
+    }
+    //avoidance();
     
     mySoftPwmWrite1(speedVal_1);
     mySoftPwmWrite2(speedVal_2);
