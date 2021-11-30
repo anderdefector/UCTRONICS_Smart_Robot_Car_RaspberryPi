@@ -186,10 +186,9 @@ int main(int argc, char *argv[])
     mySoftPwmWrite2(speedVal_2);
     mySoftPwmWrite3(speedVal_3);
     mySoftPwmWrite4(speedVal_4);
-    if(distancia > 3.0 && distancia <  6.0 ){
+    if(distancia <  7.0 ){
       printf("Hay objeto! \n");
-      GRB_MultiColour_work(3, 100 );
-      GRB_work(3, receive_colour_table[2], getBrightness);
+      beepWarning();      
       stop();
     }else{
       printf("Avanza \n");
