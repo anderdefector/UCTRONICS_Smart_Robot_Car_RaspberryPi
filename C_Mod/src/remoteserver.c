@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
   while(1){
     
     //distancia = disMeasure();
-    printf("Hola\n");
+    //printf("Hola\n");
     /*
     ySoftPwmWrite1(speedVal_1);
     mySoftPwmWrite2(speedVal_2);
