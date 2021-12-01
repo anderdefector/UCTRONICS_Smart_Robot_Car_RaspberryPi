@@ -133,6 +133,8 @@ void GRB_Set(unsigned char gdat,unsigned char rdat,unsigned char bdat);
 void GRB_MultiColour_work(unsigned int ledNum,  int brightness );
 void setup_io();
 
+void izquierda_obstaculo();
+
 void *fun1(void *arg);
 void *fun2(void *arg);
 

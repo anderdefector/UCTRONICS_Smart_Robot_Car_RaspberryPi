@@ -197,6 +197,7 @@ int main(int argc, char *argv[])
     }
     */
   }
+  ControllerShutdown();
 
 
   return 0;
@@ -225,12 +226,12 @@ void *fun1(void *arg) {
 }
 
 void *fun2(void *arg) {
-  int IRVal = 0;
-  while (1) {
+  //int IRVal = 0;
+  while (carstate.autoAvoid) {
     printf("Estoy en fun2 \n"); 
     usleep(1);
     //if (carstate.autoAvoid) {
-
+/*
     if(disWarning){
       printf("Detente \n");
       stop();
@@ -239,7 +240,9 @@ void *fun2(void *arg) {
       go_forward();
     }
     //avoidance();
-    
+    */
+    izquierda_obstaculo();
+
     mySoftPwmWrite1(speedVal_1);
     mySoftPwmWrite2(speedVal_2);
     mySoftPwmWrite3(speedVal_3);
@@ -358,7 +361,7 @@ void  clearFlag(void) {
   carstate. servoDown = 0;
   carstate. speedUp = 0;
   carstate. speedDown = 0;
-  carstate. autoAvoid = 0;
+  carstate. autoAvoid = 1;
 
 }
 
@@ -699,77 +702,6 @@ void beepWarning() {
   }
 }
 
-void trackModeWork() {
-  int num1 = 0, num2 = 0, num3 = 0;
-  while (1) {
-    if (!(carstate.trackenable))break;
-
-    mySoftPwmWrite1(speedVal_1);
-    mySoftPwmWrite2(speedVal_2);
-    mySoftPwmWrite3(speedVal_3);
-    mySoftPwmWrite4(speedVal_4);
-
-
-    num1 = GET_GPIO(leftSensor);
-    num2 = GET_GPIO(middleSensor);
-    num3 = GET_GPIO(rightSensor);
-    if ((num2 == 0) && (num1 == 0) && (num3 == 0)) {
-      stop(); continue;
-    } else if ( (num1 == 0) && num3) { //go to right
-			GRB_work(3, grb_colour_table[0], 100 ) ;
-      go_forward_left();
-      while (1) {
-		  GRB_work(3, grb_colour_table[0], 100 ) ;
-        num2 = GET_GPIO(middleSensor);
-        mySoftPwmWrite1(speedVal_1);
-        mySoftPwmWrite2(speedVal_2);
-        mySoftPwmWrite3(speedVal_3);
-        mySoftPwmWrite4(speedVal_4);
-        if (num2) {
-          if (!(carstate.trackenable))break;
-          if (disWarning) {
-            stop();
-          }
-          else {
-			  GRB_work(3, grb_colour_table[1], 100 ) ;
-            go_forward_left();
-          }
-          continue;
-        } else
-          break;
-      }
-    } else if ((num3 == 0) && num1) { // go to left
-      go_forward_right();
-      while (1) {
-        num2 = GET_GPIO(middleSensor);
-        mySoftPwmWrite1(speedVal_1);
-        mySoftPwmWrite2(speedVal_2);
-        mySoftPwmWrite3(speedVal_3);
-        mySoftPwmWrite4(speedVal_4);
-        if (num2) {
-          if (!(carstate.trackenable))break;
-          if (disWarning) {
-            stop();
-          }
-          else {
-			  GRB_work(3, grb_colour_table[2], 100 ) ;
-            go_forward_right();
-          }
-          continue;
-        } else
-          break;
-      }
-    } else if (disWarning) {
-      stop();
-    }
-    else {
-      go_forward();
-    }
-
-  }
-
-}
-
 unsigned char countLow(void)
 {
   unsigned char i = 0;
@@ -803,6 +735,31 @@ void getIR() {
   }
   done = 1;
 }
+
+void izquierda_obstaculo(){
+  static unsigned long previous_time = 0;
+  static unsigned long now_time = 0;
+  static unsigned long time_stamp = 0;
+  static unsigned char flag = 0;
+  if (!flag) {
+    flag = 1;
+    previous_time = get_pwm_timestamp();
+  }
+  now_time = get_pwm_timestamp();
+  time_stamp = now_time - previous_time;
+  if (time_stamp > 0 && time_stamp <= turnTime){
+      printf("Voy a girar! \n");
+      go_left();
+  }
+  if (time_stamp >  turnTime) {
+      printf("Termine de girar \n")
+      stop(); 
+      carstate.autoAvoid = 0;
+  }
+
+
+}
+
 void turn() {
   static unsigned long previous_time = 0;
   static unsigned long now_time = 0;
