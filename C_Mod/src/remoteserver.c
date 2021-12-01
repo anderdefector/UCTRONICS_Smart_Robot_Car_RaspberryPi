@@ -752,7 +752,7 @@ void izquierda_obstaculo(){
       go_left();
   }
   if (time_stamp >  turnTime) {
-      printf("Termine de girar \n")
+      printf("Termine de girar \n");
       stop(); 
       carstate.autoAvoid = 0;
   }
