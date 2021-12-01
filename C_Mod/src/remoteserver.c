@@ -227,11 +227,17 @@ void *fun1(void *arg) {
 
 void *fun2(void *arg) {
   //int IRVal = 0;
-  while (carstate.autoAvoid == 1) {
+  while (1) {
     printf("Estoy en fun2 \n"); 
     usleep(1);
-    //if (carstate.autoAvoid) {
-/*
+    mySoftPwmWrite1(speedVal_1);
+    mySoftPwmWrite2(speedVal_2);
+    mySoftPwmWrite3(speedVal_3);
+    mySoftPwmWrite4(speedVal_4);
+    if (carstate.autoAvoid) {
+      izquierda_obstaculo();
+    }
+/*    izquierda_obstaculo();
     if(disWarning){
       printf("Detente \n");
       stop();
@@ -241,7 +247,7 @@ void *fun2(void *arg) {
     }
     //avoidance();
     */
-    izquierda_obstaculo();
+    
 
     mySoftPwmWrite1(speedVal_1);
     mySoftPwmWrite2(speedVal_2);
