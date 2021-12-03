@@ -762,8 +762,6 @@ void izquierda_obstaculo(){
       stop(); 
       carstate.autoAvoid = 0;
   }
-
-
 }
 
 void turn() {
