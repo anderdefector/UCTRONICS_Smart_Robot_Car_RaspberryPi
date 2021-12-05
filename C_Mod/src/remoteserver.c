@@ -742,6 +742,29 @@ void getIR() {
   done = 1;
 }
 
+void Avanza(){
+  static unsigned long previous_time = 0;
+  static unsigned long now_time = 0;
+  static unsigned long time_stamp = 0;
+  static unsigned char flag = 0;
+  if (!flag) {
+    flag = 1;
+    previous_time = get_pwm_timestamp();
+  }
+  now_time = get_pwm_timestamp();
+  time_stamp = now_time - previous_time;
+  if (time_stamp > 0 && time_stamp <= turnTime){
+      printf("Voy a avanzar! \n");
+      go_forward();
+  }
+  if (time_stamp >  turnTime) {
+      printf("Termine de avanzar \n");
+      stop(); 
+      carstate.autoAvoid = 0;
+  }
+
+}
+
 void izquierda_obstaculo(){
   static unsigned long previous_time = 0;
   static unsigned long now_time = 0;
