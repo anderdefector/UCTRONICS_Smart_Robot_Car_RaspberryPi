@@ -230,11 +230,12 @@ void *fun2(void *arg) {
   while (1) {
     //printf("Estoy en fun2 \n"); 
     usleep(1);
-    /*
+    
     if (carstate.autoAvoid) {
-      izquierda_obstaculo();
+      //izquierda_obstaculo();
+      Avanza();
     }
-    */
+    
 /*    izquierda_obstaculo();
     if(disWarning){
       printf("Detente \n");
