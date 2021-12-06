@@ -752,11 +752,11 @@ void Avanza(){
   }
   now_time = get_pwm_timestamp();
   time_stamp = now_time - previous_time;
-  if (time_stamp > 0 && time_stamp <= turnTime){
+  if (time_stamp > 0 && time_stamp <= forwardTime){
       printf("Voy a avanzar! \n");
       go_forward();
   }
-  if (time_stamp >  turnTime) {
+  if (time_stamp >  forwardTime) {
       printf("Termine de avanzar \n");
       stop(); 
       carstate.autoAvoid = 0;
