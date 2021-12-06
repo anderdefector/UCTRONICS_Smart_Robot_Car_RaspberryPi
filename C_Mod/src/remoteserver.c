@@ -741,6 +741,7 @@ void getIR() {
   done = 1;
 }
 
+
 void Avanza(){
   static unsigned long previous_time = 0;
   static unsigned long now_time = 0;
