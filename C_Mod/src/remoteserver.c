@@ -228,7 +228,7 @@ void *fun1(void *arg) {
 void *fun2(void *arg) {
   //int IRVal = 0;
   while (1) {
-    printf("Estoy en fun2 \n"); 
+    //printf("Estoy en fun2 \n"); 
     usleep(1);
     /*
     if (carstate.autoAvoid) {
