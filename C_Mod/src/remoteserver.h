@@ -85,7 +85,7 @@
 #define halfPWMPeriod   5000  //5ms
 #define forwardTime		870000
 //#define  turnTime       500000    //500ms
-#define  turnTime         300000    //900ms
+#define  turnTime         500000    //900ms
 
 struct motionstate {
         unsigned int left:1;
