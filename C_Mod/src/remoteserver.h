@@ -135,6 +135,7 @@ void GRB_MultiColour_work(unsigned int ledNum,  int brightness );
 void setup_io();
 
 void izquierda_obstaculo();
+void Avanza();
 
 void *fun1(void *arg);
 void *fun2(void *arg);

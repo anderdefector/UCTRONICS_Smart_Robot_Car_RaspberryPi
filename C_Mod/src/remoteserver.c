@@ -232,8 +232,8 @@ void *fun2(void *arg) {
     usleep(1);
     
     if (carstate.autoAvoid) {
-      izquierda_obstaculo();
-      //Avanza();
+      //izquierda_obstaculo();
+      Avanza();
     }
     
 /*    izquierda_obstaculo();
