@@ -813,7 +813,7 @@ void reconocimiento(void)
       //izquierda_obstaculo();
     } else {
       printf("Go forward\n");
-      Avanza();
+      //Avanza();
     }
   }
 }
