@@ -232,7 +232,8 @@ void *fun2(void *arg) {
     usleep(1);
     
     if (carstate.autoAvoid) {
-      
+      Avanza();
+
       if(disWarning){
           printf("Detente \n");
           //stop();
@@ -244,7 +245,7 @@ void *fun2(void *arg) {
           */
       }else{
           printf("Vamonos!!! \n");
-          Avanza();
+          
       }
     }
     
@@ -763,7 +764,8 @@ void Avanza(){
   if (time_stamp >  forwardTime) {
       printf("Termine de avanzar \n");
       stop(); 
-      //flag = 0;
+      flag = 1;
+      usleep(1);
       //carstate.autoAvoid = 0;
   }
 
