@@ -230,33 +230,12 @@ void *fun2(void *arg) {
   while (1) {
     //printf("Estoy en fun2 \n"); 
     usleep(1);
+
+   
     
     if (carstate.autoAvoid) {
-      if(carstate.forward){
-          Avanza();
-      }
-      if(disWarning){
-          printf("Detente \n");
-          //stop();
-          /*
-          izquierda_obstaculo();
-          stop();
-          izquierda_obstaculo();
-          stop();
-          */
-      }else{
-          carstate.forward = 1;
-      }
+        reconocimiento();
     }
-    
-
-    
-
-    mySoftPwmWrite1(speedVal_1);
-    mySoftPwmWrite2(speedVal_2);
-    mySoftPwmWrite3(speedVal_3);
-    mySoftPwmWrite4(speedVal_4);
-  }
 
 }
 
@@ -764,7 +743,8 @@ void Avanza(){
   if (time_stamp >  forwardTime) {
       printf("Termine de avanzar \n");
       stop(); 
-      carstate.forward = 0;
+      flag = 0;
+      //carstate.forward = 0;
   }
 
 }
@@ -813,6 +793,32 @@ void turn() {
     stop(); flag = 0;turnLeftFlag = 0;turnBackFlag = 0;
   }
 }
+
+
+void reconocimiento(void)
+{
+
+  while (1) {
+    /*
+    if (!(carstate.autoAvoid)) {
+      stop();
+      break;
+    }*/
+    mySoftPwmWrite1(speedVal_1);
+    mySoftPwmWrite2(speedVal_2);
+    mySoftPwmWrite3(speedVal_3);
+    mySoftPwmWrite4(speedVal_4);
+    if (disWarning) {
+      printf("Evadiendo\n");
+      izquierda_obstaculo();
+      izquierda_obstaculo();
+    } else {
+      printf("Go forward\n");
+      Avanza();
+    }
+  }
+}
+
 
 void avoidance(void)
 {

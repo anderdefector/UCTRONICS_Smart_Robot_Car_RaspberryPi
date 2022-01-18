@@ -136,6 +136,7 @@ void setup_io();
 
 void izquierda_obstaculo();
 void Avanza();
+void avoidance(void);
 
 void *fun1(void *arg);
 void *fun2(void *arg);
