@@ -30,10 +30,10 @@
 int baseSpeed, addLeftSpeed, addRightSpeed;
 unsigned long getColour = 0xFF0000;
 unsigned int getBrightness = 100;
-static int speedVal_1 = 1000;
-static int speedVal_2 = 1000;
-static int speedVal_3 = 1000;
-static int speedVal_4 = 1000;
+static int speedVal_1 = 800;
+static int speedVal_2 = 800;
+static int speedVal_3 = 800;
+static int speedVal_4 = 800;
 
 
 struct motionstate carstate = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -232,7 +232,7 @@ void *fun2(void *arg) {
     usleep(1);
     
     if (carstate.autoAvoid) {
-      reconocimiento();
+      avoidance();
     }
 
   }
