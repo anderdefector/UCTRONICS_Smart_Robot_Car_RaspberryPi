@@ -764,7 +764,7 @@ void Avanza(){
   if (time_stamp >  forwardTime) {
       printf("Termine de avanzar \n");
       stop(); 
-      carstate.autoAvoid = 0;
+      carstate.forward = 0;
   }
 
 }
