@@ -728,11 +728,12 @@ void Avanza(){
   static unsigned long previous_time = 0;
   static unsigned long now_time = 0;
   static unsigned long time_stamp = 0;
-  static unsigned char flag = 0;
-  if (!flag) {
-    flag = 1;
+  static unsigned char flag5 = 0;
+  if (!flag5) {
+    flag5 = 1;
     previous_time = get_pwm_timestamp();
   }
+
   now_time = get_pwm_timestamp();
   time_stamp = now_time - previous_time;
   if (time_stamp > 0 && time_stamp <= forwardTime){
@@ -742,7 +743,7 @@ void Avanza(){
   if (time_stamp >  forwardTime) {
       printf("Termine de avanzar \n");
       stop(); 
-      flag = 0;
+      flag5 = 0;
       //carstate.forward = 0;
   }
 
