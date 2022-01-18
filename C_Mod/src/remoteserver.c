@@ -236,10 +236,12 @@ void *fun2(void *arg) {
       if(disWarning){
           printf("Detente \n");
           stop();
+          /*
           izquierda_obstaculo();
           stop();
           izquierda_obstaculo();
           stop();
+          */
       }else{
           printf("Vamonos!!! \n");
           Avanza();
