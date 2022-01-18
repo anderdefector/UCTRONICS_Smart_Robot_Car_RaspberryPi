@@ -338,7 +338,7 @@ int updateCarMotion(void) {
 }
 void  clearFlag(void) {
   carstate.left = 0;
-  carstate.forward = 1;
+  carstate.forward = 0;
   carstate.right = 0;
   carstate. stop = 0;
   carstate. back = 0;
@@ -809,8 +809,8 @@ void reconocimiento(void)
     mySoftPwmWrite4(speedVal_4);
     if (disWarning) {
       printf("Evadiendo\n");
-      izquierda_obstaculo();
-      izquierda_obstaculo();
+      //izquierda_obstaculo();
+      //izquierda_obstaculo();
     } else {
       printf("Go forward\n");
       Avanza();
