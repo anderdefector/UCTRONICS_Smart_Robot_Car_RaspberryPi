@@ -232,7 +232,7 @@ void *fun2(void *arg) {
     usleep(1);
     
     if (carstate.autoAvoid) {
-      avoidance();
+      reconocimiento();
     }
 
   }
@@ -811,8 +811,10 @@ void reconocimiento(void)
     if (disWarning) {
       printf("Evadiendo\n");
       stop();
-      //izquierda_obstaculo();
-      //izquierda_obstaculo();
+      izquierda_obstaculo();
+      stop();
+      izquierda_obstaculo();
+      stop();
     } else {
       printf("Go forward\n");
       go_forward();
