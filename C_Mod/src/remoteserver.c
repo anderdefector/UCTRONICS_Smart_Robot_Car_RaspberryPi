@@ -785,15 +785,12 @@ void turn() {
   time_stamp = now_time - previous_time;
   if (time_stamp > 0 && time_stamp <= turnTime ) { //1/2T
     go_back();
-    GRB_work(3, grb_colour_table[3], getBrightness);
   }
   if (time_stamp > turnTime && time_stamp <= 2 * turnTime ) { //1T
     go_left();
-    GRB_work(3, grb_colour_table[4], getBrightness);
   }
   if (time_stamp > 2 * turnTime) {
     stop(); flag = 0;
-    GRB_work(3, grb_colour_table[5], getBrightness);
   }
 }
 
@@ -816,7 +813,6 @@ void reconocimiento(void)
       turn();
     } else {
       printf("Go forward\n");
-      GRB_work(3, grb_colour_table[2], getBrightness);
       go_forward();
     }
   }
