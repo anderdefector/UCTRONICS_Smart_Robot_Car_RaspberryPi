@@ -30,10 +30,10 @@
 int baseSpeed, addLeftSpeed, addRightSpeed;
 unsigned long getColour = 0xFF0000;
 unsigned int getBrightness = 100;
-static int speedVal_1 = 800;
-static int speedVal_2 = 800;
-static int speedVal_3 = 800;
-static int speedVal_4 = 800;
+static int speedVal_1 = 500;
+static int speedVal_2 = 500;
+static int speedVal_3 = 500;
+static int speedVal_4 = 500;
 
 
 struct motionstate carstate = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -810,11 +810,7 @@ void reconocimiento(void)
     mySoftPwmWrite4(speedVal_4);
     if (disWarning) {
       printf("Evadiendo\n");
-      stop();
-      izquierda_obstaculo();
-      stop();
-      izquierda_obstaculo();
-      stop();
+      turn();
     } else {
       printf("Go forward\n");
       go_forward();

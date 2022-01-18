@@ -82,7 +82,7 @@
  		
 #define BUFFER_SIZE 10
 
-#define halfPWMPeriod   800  //5ms
+#define halfPWMPeriod   500  //5ms
 #define forwardTime		400000
 //#define  turnTime       500000    //500ms
 #define  turnTime         400000    //900ms
