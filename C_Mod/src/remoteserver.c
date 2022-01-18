@@ -230,22 +230,12 @@ void *fun2(void *arg) {
   while (1) {
     //printf("Estoy en fun2 \n"); 
     usleep(1);
-
-    Avanza();
     
     if (carstate.autoAvoid) {
-      
-    
+      reconocimiento();
+    }
 
-    
-
-    mySoftPwmWrite1(speedVal_1);
-    mySoftPwmWrite2(speedVal_2);
-    mySoftPwmWrite3(speedVal_3);
-    mySoftPwmWrite4(speedVal_4);
   }
-
-}
 }
 
 
