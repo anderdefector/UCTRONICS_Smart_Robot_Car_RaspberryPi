@@ -784,13 +784,16 @@ void turn() {
   now_time = get_pwm_timestamp();
   time_stamp = now_time - previous_time;
   if (time_stamp > 0 && time_stamp <= turnTime ) { //1/2T
-    go_back();turnBackFlag = 1;
+    go_back();
+    GRB_work(3, grb_colour_table[3], getBrightness);
   }
   if (time_stamp > turnTime && time_stamp <= 2 * turnTime ) { //1T
-    go_left();turnLeftFlag = 1;
+    go_left();
+    GRB_work(3, grb_colour_table[4], getBrightness);
   }
   if (time_stamp > 2 * turnTime) {
-    stop(); flag = 0;turnLeftFlag = 0;turnBackFlag = 0;
+    stop(); flag = 0;
+    GRB_work(3, grb_colour_table[5], getBrightness);
   }
 }
 
@@ -813,7 +816,8 @@ void reconocimiento(void)
       turn();
     } else {
       printf("Go forward\n");
-      go_forward();
+      GRB_work(3, grb_colour_table[2], getBrightness);
+      //go_forward();
     }
   }
 }
