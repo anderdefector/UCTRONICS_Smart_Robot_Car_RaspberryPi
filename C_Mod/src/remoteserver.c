@@ -761,6 +761,7 @@ void Avanza(){
   if (time_stamp >  forwardTime) {
       printf("Termine de avanzar \n");
       stop(); 
+      flag = 0;
       //carstate.autoAvoid = 0;
   }
 
@@ -784,6 +785,7 @@ void izquierda_obstaculo(){
   if (time_stamp >  turnTime) {
       printf("Termine de girar \n");
       stop(); 
+      flag = 0;
       //carstate.autoAvoid = 0;
   }
 }
