@@ -233,19 +233,20 @@ void *fun2(void *arg) {
     
     if (carstate.autoAvoid) {
       //izquierda_obstaculo();
-      Avanza();
+      if(disWarning){
+          printf("Detente \n");
+          stop();
+          izquierda_obstaculo();
+          stop();
+          izquierda_obstaculo();
+          stop();
+      }else{
+          printf("Vamonos!!! \n");
+          Avanza();
+      }
     }
     
-/*    izquierda_obstaculo();
-    if(disWarning){
-      printf("Detente \n");
-      stop();
-    }else{
-      printf("Vamonos!!! \n");
-      go_forward();
-    }
-    //avoidance();
-    */
+
     
 
     mySoftPwmWrite1(speedVal_1);
@@ -760,7 +761,7 @@ void Avanza(){
   if (time_stamp >  forwardTime) {
       printf("Termine de avanzar \n");
       stop(); 
-      carstate.autoAvoid = 0;
+      //carstate.autoAvoid = 0;
   }
 
 }
@@ -783,7 +784,7 @@ void izquierda_obstaculo(){
   if (time_stamp >  turnTime) {
       printf("Termine de girar \n");
       stop(); 
-      carstate.autoAvoid = 0;
+      //carstate.autoAvoid = 0;
   }
 }
 
