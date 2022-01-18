@@ -232,8 +232,9 @@ void *fun2(void *arg) {
     usleep(1);
     
     if (carstate.autoAvoid) {
-      Avanza();
-
+      if(carstate.forward){
+          Avanza();
+      }
       if(disWarning){
           printf("Detente \n");
           //stop();
@@ -244,8 +245,7 @@ void *fun2(void *arg) {
           stop();
           */
       }else{
-          printf("Vamonos!!! \n");
-          
+          carstate.forward = 1;
       }
     }
     
@@ -360,7 +360,7 @@ int updateCarMotion(void) {
 }
 void  clearFlag(void) {
   carstate.left = 0;
-  carstate.forward = 0;
+  carstate.forward = 1;
   carstate.right = 0;
   carstate. stop = 0;
   carstate. back = 0;
@@ -764,9 +764,7 @@ void Avanza(){
   if (time_stamp >  forwardTime) {
       printf("Termine de avanzar \n");
       stop(); 
-      flag = 0;
-      usleep(1);
-      //carstate.autoAvoid = 0;
+      carstate.autoAvoid = 0;
   }
 
 }
