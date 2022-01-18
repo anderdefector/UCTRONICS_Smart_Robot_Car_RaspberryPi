@@ -817,7 +817,7 @@ void reconocimiento(void)
     } else {
       printf("Go forward\n");
       GRB_work(3, grb_colour_table[2], getBrightness);
-      //go_forward();
+      go_forward();
     }
   }
 }
