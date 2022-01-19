@@ -810,10 +810,10 @@ void reconocimiento(void)
     mySoftPwmWrite4(speedVal_4);
     if (disWarning) {
       printf("Evadiendo\n");
-      turn();
+      //turn();
     } else {
       printf("Go forward\n");
-      go_forward();
+      Avanza();
     }
   }
 }
