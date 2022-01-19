@@ -760,15 +760,14 @@ void izquierda_obstaculo(){
   }
   now_time = get_pwm_timestamp();
   time_stamp = now_time - previous_time;
-  if (time_stamp > 0 && time_stamp <= turnTime){
-      printf("Voy a girar! \n");
-      go_left();
+  if (time_stamp > 0 && time_stamp <= turnTime ) { //1/2T
+    go_back();
   }
-  if (time_stamp >  turnTime) {
-      printf("Termine de girar \n");
-      stop(); 
-      flag = 0;
-      //carstate.autoAvoid = 0;
+  if (time_stamp > turnTime && time_stamp <= 2 * turnTime ) { //1T
+    go_left();
+  }
+  if (time_stamp > 2 * turnTime) {
+    go_left(); flag = 0;
   }
 }
 
@@ -797,21 +796,20 @@ void turn() {
 
 void reconocimiento(void)
 {
+  int speed;
 
   while (1) {
-    /*
-    if (!(carstate.autoAvoid)) {
-      stop();
-      break;
-    }*/
-    mySoftPwmWrite1(speedVal_1);
-    mySoftPwmWrite2(speedVal_2);
-    mySoftPwmWrite3(speedVal_3);
-    mySoftPwmWrite4(speedVal_4);
+    speed = 500;
+    mySoftPwmWrite1(speed);
+    mySoftPwmWrite2(speed);
+    mySoftPwmWrite3(speed);
+    mySoftPwmWrite4(speed);
     if (disWarning) {
       printf("Evadiendo\n");
-      //turn();
+      izquierda_obstaculo();
     } else {
+      
+
       printf("Go forward\n");
       Avanza();
     }
