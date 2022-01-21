@@ -219,12 +219,12 @@ int main(int argc, char *argv[])
     while ((n = read(newsockfd, &buffer, BUFFER_SIZE)) > 0)
     {
       //Para analizar el buffer
-      cout << "Buffer: ";
+      printf("Buffer: ");
       for (int i=0; i < 10; i++){
-          cout << buffer[i] ;
+          printf("%s",buffer[i]) ;
       }
-      cout endl;
-      cout << "n: " << n << endl;
+      printf("\n");
+      printf("n: %d", n);
       //Para analizar el buffer
       if (buffer[0] == 's') { //0x73
         baseSpeed = buffer[1];
