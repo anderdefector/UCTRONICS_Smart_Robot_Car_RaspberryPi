@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
       //Para analizar el buffer
       printf("Buffer: ");
       for (int i=0; i < 10; i++){
-          printf("%s",buffer[i]) ;
+          printf("%d",buffer[i]) ;
       }
       printf("\n");
       printf("n: %d", n);
