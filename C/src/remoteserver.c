@@ -218,6 +218,14 @@ int main(int argc, char *argv[])
     bzero(&buffer, BUFFER_SIZE);
     while ((n = read(newsockfd, &buffer, BUFFER_SIZE)) > 0)
     {
+      //Para analizar el buffer
+      cout << "Buffer: ";
+      for (int i=0; i < 10; i++){
+          cout << buffer[i] ;
+      }
+      cout endl;
+      cout << "n: " << n << endl;
+      //Para analizar el buffer
       if (buffer[0] == 's') { //0x73
         baseSpeed = buffer[1];
         addLeftSpeed = buffer[2];
@@ -257,7 +265,7 @@ int main(int argc, char *argv[])
 	  	for(count = 0; count <n; count ++){
 			printf("receive data %d\r\n",buffer[count]);
 		}
-	  	if(buffer[0]==0xFF && buffer[1] == 0x55){
+	  if(buffer[0]==0xFF && buffer[1] == 0x55){
 				for (count = 2; count < n; count ++) {
 					 PhaseScratchCmd(buffer[count]);
 					}

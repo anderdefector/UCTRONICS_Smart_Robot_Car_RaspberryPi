@@ -82,7 +82,7 @@
  		
 #define BUFFER_SIZE 10
 
-#define halfPWMPeriod   5000  //5ms
+#define halfPWMPeriod   500  //5ms
 #define forwardTime		400000
 //#define  turnTime       500000    //500ms
 #define  turnTime         400000    //900ms
@@ -146,10 +146,10 @@ int updateCarMotion(void);
 
 int updateCarState(char command);
 
-void mySoftPwmWrite1( int value);
-void mySoftPwmWrite2( int value);
-void mySoftPwmWrite3( int value);
-void mySoftPwmWrite4( int value);
+void mySoftPwmWrite1( int value , int halfPWMPeriod );
+void mySoftPwmWrite2( int value , int halfPWMPeriod );
+void mySoftPwmWrite3( int value , int halfPWMPeriod);
+void mySoftPwmWrite4( int value, int halfPWMPeriod);
 
 void GRBInit();
 void GRB_work(unsigned int ledNum, unsigned long colour, int brightness );
