@@ -166,10 +166,12 @@ int main(int argc, char *argv[])
     servoCtrl(servo_2, 1090);
   }
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
   if (sockfd < 0) {
     perror("ERROR opening socket");
     exit(1);
   }
+  close(sockfd);
   /* Initialize socket structure */
   bzero((char *) &serv_addr, sizeof(serv_addr));
   portno = 2001;
@@ -313,7 +315,7 @@ void *fun1(void *arg) {
       GRB_work(3, receive_colour_table[1], getBrightness);
       disWarning = 1;
       //Se agrega para enviar objeto
-      buffer_enviar[0] = 1;
+      buffer_enviar[0] = (int) dis;
       send(newsockfd , buffer_enviar , 1 , 0 );
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
@@ -323,7 +325,7 @@ void *fun1(void *arg) {
     } else{
       disWarning = 0;
       //Se agrega para saber si hay objeto
-      buffer_enviar[0] = 0;
+      buffer_enviar[0] = (int) dis;
       send(newsockfd , buffer_enviar , 1 , 0 );
     } 
 
