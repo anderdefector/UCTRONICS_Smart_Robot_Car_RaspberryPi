@@ -135,6 +135,7 @@ int main(int argc, char *argv[])
 {
   usleep(10);
   char buffer[BUFFER_SIZE]; 
+  char buffer_enviar[BUFFER_SIZE];
   struct sockaddr_in serv_addr, cli_addr;
     struct sigaction sa;
   int  n, pulsenum, count ;
@@ -310,13 +311,21 @@ void *fun1(void *arg) {
     if (dis > 5 && dis <= 10) {
       GRB_work(3, receive_colour_table[1], getBrightness);
       disWarning = 1;
+      //Se agrega para enviar objeto
+      buffer_enviar[0] = 1
+      send(newsockfd , buffer_enviar , 1 , 0 );
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
           stop();
         }
 
       }
-    } else disWarning = 0;
+    } else{
+      disWarning = 0;
+      //Se agrega para saber si hay objeto
+      buffer_enviar[0] = 0;
+      send(newsockfd , buffer_enviar , 1 , 0 );
+    } 
 
     if (!poweroffFlag) {
       beepWarning();
