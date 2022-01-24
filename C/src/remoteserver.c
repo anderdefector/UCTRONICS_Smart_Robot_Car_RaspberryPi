@@ -171,7 +171,6 @@ int main(int argc, char *argv[])
     perror("ERROR opening socket");
     exit(1);
   }
-  close(sockfd);
   /* Initialize socket structure */
   bzero((char *) &serv_addr, sizeof(serv_addr));
   portno = 2001;
