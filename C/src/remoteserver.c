@@ -299,6 +299,8 @@ void *fun1(void *arg) {
   float dis = 0, temp_min = 0, temp_max = 0, temp_value = 0, temp = 0;
   while (1) {
     usleep(1);
+    dis = disMeasure();
+    /*
     temp_min  = temp_max;
     temp_value = temp_max;
     for (cnt = 0; cnt < 3; cnt ++ ) {
@@ -309,6 +311,7 @@ void *fun1(void *arg) {
     }
     dis = (temp_value - temp_max - temp_min);
     temp_value = 0; temp_min = 0; temp_max = 0; temp_value = 0; temp = 0;
+    */
     /*Se Ajusta para probar la distancia  valores originales 0 y 50 */
     if (dis <= 20) {
       GRB_work(3, receive_colour_table[1], getBrightness);
