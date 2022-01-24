@@ -312,7 +312,7 @@ void *fun1(void *arg) {
       GRB_work(3, receive_colour_table[1], getBrightness);
       disWarning = 1;
       //Se agrega para enviar objeto
-      buffer_enviar[0] = 1
+      buffer_enviar[0] = 1;
       send(newsockfd , buffer_enviar , 1 , 0 );
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
