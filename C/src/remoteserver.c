@@ -49,6 +49,7 @@ unsigned char done;
 int sockfd, newsockfd, portno, clilen;
 unsigned char client_Connected = 0;
 unsigned char count;
+char buffer_enviar[BUFFER_SIZE];
 
 #define BLOCK_SIZE (4*1024)
 
@@ -135,7 +136,7 @@ int main(int argc, char *argv[])
 {
   usleep(10);
   char buffer[BUFFER_SIZE]; 
-  char buffer_enviar[BUFFER_SIZE];
+ 
   struct sockaddr_in serv_addr, cli_addr;
     struct sigaction sa;
   int  n, pulsenum, count ;
