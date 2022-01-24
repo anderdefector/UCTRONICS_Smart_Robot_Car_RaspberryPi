@@ -295,8 +295,8 @@ int main(int argc, char *argv[])
 }
 
 void *fun1(void *arg) {
-  unsigned char cnt = 0;
-  float dis = 0, temp_min = 0, temp_max = 0, temp_value = 0, temp = 0;
+  //unsigned char cnt = 0;
+  //float dis = 0, temp_min = 0, temp_max = 0, temp_value = 0, temp = 0;
   while (1) {
     usleep(1);
     dis = disMeasure();
@@ -322,11 +322,13 @@ void *fun1(void *arg) {
       //buffer_enviar[0] = (int) dis;
       buffer_enviar[0] = 1;
       send(newsockfd , buffer_enviar , 1 , 0 );
+      /*
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
           stop();
         }
       }
+      */
     } else{
       disWarning = 0;
       //Se agrega para saber si hay objeto
@@ -721,6 +723,11 @@ int updateCarState(char command) {
       GRB_work(3, receive_colour_table[2], getBrightness);
       break;
     case 1: /* up */
+    GRB_work(3, receive_colour_table[0], getBrightness);
+    carstate.forward = 1;
+	  carstate.trackenable = 0;
+	  carstate.autoAvoid = 0;
+    /*
       if (!disWarning) {
         carstate.forward = 1;
         GRB_work(3, receive_colour_table[0], getBrightness);
@@ -729,6 +736,7 @@ int updateCarState(char command) {
       carstate.forward = 0;
 	  carstate.trackenable = 0;
 	  carstate.autoAvoid = 0;
+    */
       break;
     case 2: /* right */
       carstate.right = 1;
