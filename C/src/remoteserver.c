@@ -309,7 +309,7 @@ void *fun1(void *arg) {
     dis = (temp_value - temp_max - temp_min);
     temp_value = 0; temp_min = 0; temp_max = 0; temp_value = 0; temp = 0;
     /*Se Ajusta para probar la distancia  valores originales 0 y 50 */
-    if (dis > 5 && dis <= 10) {
+    if (dis <= 20) {
       GRB_work(3, receive_colour_table[1], getBrightness);
       disWarning = 1;
       //Se agrega para enviar objeto
@@ -319,7 +319,6 @@ void *fun1(void *arg) {
         if (!(carstate.autoAvoid)) {
           stop();
         }
-
       }
     } else{
       disWarning = 0;
