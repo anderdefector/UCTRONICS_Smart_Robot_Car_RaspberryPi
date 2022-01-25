@@ -268,6 +268,12 @@ int main(int argc, char *argv[])
 	  	for(count = 0; count <n; count ++){
 			printf("receive data %d\r\n",buffer[count]);
 		}
+    //Se agrega para recibir la distancia
+    if(buffer[0]=='d'){
+      buffer_enviar[0] = (int) dis;
+      send(newsockfd , buffer_enviar , 1 , 0 );
+      printf("Va la distancia %d\n", buffer_enviar[0]);
+    }
 	  if(buffer[0]==0xFF && buffer[1] == 0x55){
 				for (count = 2; count < n; count ++) {
 					 PhaseScratchCmd(buffer[count]);
