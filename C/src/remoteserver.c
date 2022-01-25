@@ -37,7 +37,7 @@ static int speedVal_3 = 5000;
 static int speedVal_4 = 5000;
 
 
-struct motionstate carstate = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+struct motionstate carstate = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static unsigned char disWarning  = 0;
 static unsigned char poweroffFlag = 0;
 static unsigned char turnLeftFlag = 0;
@@ -271,9 +271,12 @@ int main(int argc, char *argv[])
 		}
     //Se agrega para recibir la distancia
     if(buffer[0]=='d'){
+      carstate.distancia=1;
+      /*
       buffer_enviar[0] = (int) dis;
       send(newsockfd , buffer_enviar , 1 , 0 );
       printf("Va la distancia %d\n", buffer_enviar[0]);
+      */
     }
 	  if(buffer[0]==0xFF && buffer[1] == 0x55){
 				for (count = 2; count < n; count ++) {
@@ -308,6 +311,12 @@ void *fun1(void *arg) {
   while (1) {
     usleep(1);
     dis = disMeasure();
+    if(carstate.distancia){
+      buffer_enviar[0] = (int) dis;
+      send(newsockfd , buffer_enviar , 1 , 0 );
+      printf("Va la distancia %d\n", buffer_enviar[0]);
+      carstate.distancia = 0;
+    }
     //buffer_enviar[0] = (int) dis;
     //send(newsockfd , buffer_enviar , 1 , 0 );
     /*
