@@ -318,11 +318,14 @@ void *fun1(void *arg) {
     /*Se Ajusta para probar la distancia  valores originales 0 y 50 */
     if (dis <= 20) {
       GRB_work(3, receive_colour_table[1], getBrightness);
-      disWarning = 1;
+      if(disWarning == 0){
+        buffer_enviar[0] = 1;
+        send(newsockfd , buffer_enviar , 1 , 0 );
+        disWarning = 1;
+      }
       //Se agrega para enviar objeto
       //buffer_enviar[0] = (int) dis;
-      buffer_enviar[0] = 1;
-      send(newsockfd , buffer_enviar , 1 , 0 );
+     
       /*
       if (carstate.forward) {
         if (!(carstate.autoAvoid)) {
@@ -331,11 +334,13 @@ void *fun1(void *arg) {
       }
       */
     } else{
-      disWarning = 0;
+      if(disWarning == 1){
+        buffer_enviar[0] = 0;
+        send(newsockfd , buffer_enviar , 1 , 0 );
+        disWarning = 0;
+      }
       //Se agrega para saber si hay objeto
       //buffer_enviar[0] = (int) dis;
-      buffer_enviar[0] = 0;
-      send(newsockfd , buffer_enviar , 1 , 0 );
     } 
 
     if (!poweroffFlag) {
