@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
 void *fun1(void *arg) {
   //unsigned char cnt = 0;
   //float dis = 0, temp_min = 0, temp_max = 0, temp_value = 0, temp = 0;
-  int num1, num2, num3;
+  int num1 = 0, num2 = 0, num3 = 0;
   while (1) {
     usleep(1);
     dis = disMeasure();
