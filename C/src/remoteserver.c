@@ -307,16 +307,17 @@ int main(int argc, char *argv[])
 void *fun1(void *arg) {
   //unsigned char cnt = 0;
   //float dis = 0, temp_min = 0, temp_max = 0, temp_value = 0, temp = 0;
-  int num1 = 0, num2 = 0, num3 = 0;
+  //int num1 = 0, num2 = 0, num3 = 0;
   while (1) {
     usleep(1);
     dis = disMeasure();
+     /*
     num1 = GET_GPIO(leftSensor);
     num2 = GET_GPIO(middleSensor);
     num3 = GET_GPIO(rightSensor);
 
     printf("Izq: %d, Medio: %d, Der: %d \n ", num1, num2, num3);  
-
+    */
     if(carstate.distancia){
       buffer_enviar[0] = (int) dis;
       send(newsockfd , buffer_enviar , 1 , 0 );
@@ -459,8 +460,14 @@ int updateCarMotion(void) {
     strcpy(direction, "right");
     go_right();
   } else if( carstate. stop){
-	  carstate. stop = 0;
+	  carstate.stop = 0;
 	  stop();
+  } else if( carstate.forwardleft ){ //Se agrega estado
+    strcpy(direction, "forward left");
+    go_forward_left();
+  } else if (carstate.forwardright){ //Se agrega estado
+    strcpy(direction, "forward right");
+    go_forward_right();
   }
 
   
@@ -518,6 +525,8 @@ void  clearFlag(void) {
   carstate.right = 0;
   carstate. stop = 0;
   carstate. back = 0;
+  carstate.forwardleft = 0; // Se agrega estado
+  carstate.forwardright = 0; // Se agrega estado
   carstate.servoLeft = 0;
   carstate. servoRight = 0;
   carstate. servoUp = 0;
@@ -525,6 +534,7 @@ void  clearFlag(void) {
   carstate. speedUp = 0;
   carstate. speedDown = 0;
   carstate. autoAvoid = 0;
+  carstate. distancia = 0; // Se agrega estado
 
 }
 
@@ -792,11 +802,13 @@ int updateCarState(char command) {
     case 5: /* stop*/
       carstate.forward = 0;
       carstate.back = 0;
-	  carstate.left = 0;
-	  carstate.right = 0;
+	    carstate.left = 0;
+	    carstate.right = 0;
+      carstate.forwardleft = 0;
+      carstate.forwardright = 0;
       carstate.trackenable = 0;
       carstate.autoAvoid = 0;
-	  carstate. stop = 1;
+	    carstate.stop = 1;
       break;
     case 6: /* stop right */
       carstate.right = 0;
@@ -848,6 +860,13 @@ int updateCarState(char command) {
       //system("sudo poweroff");
 
       break;
+    case 20: /* Se agrega caso - Avanza y gira izquierda a la vez*/
+      carstate.forwardleft = 1;
+    break;
+    case 21: /* Se agrega caso - Avanza y gira derecha a la vez*/
+      carstate.forwardright = 1;
+    break;
+
   }
   return 0;
 }
