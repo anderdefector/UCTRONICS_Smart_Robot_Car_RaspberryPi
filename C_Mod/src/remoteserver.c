@@ -30,13 +30,14 @@
 int baseSpeed, addLeftSpeed, addRightSpeed;
 unsigned long getColour = 0xFF0000;
 unsigned int getBrightness = 100;
-static int speedVal_1 = 500;
-static int speedVal_2 = 500;
-static int speedVal_3 = 500;
-static int speedVal_4 = 500;
+//Originales 5000
+static int speedVal_1 = 5000;
+static int speedVal_2 = 5000;
+static int speedVal_3 = 5000;
+static int speedVal_4 = 5000;
 
 
-struct motionstate carstate = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+struct motionstate carstate = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static unsigned char disWarning  = 0;
 static unsigned char poweroffFlag = 0;
 static unsigned char turnLeftFlag = 0;
@@ -48,6 +49,8 @@ unsigned char done;
 int sockfd, newsockfd, portno, clilen;
 unsigned char client_Connected = 0;
 unsigned char count;
+char buffer_enviar[BUFFER_SIZE];
+float dis = 0;
 
 #define BLOCK_SIZE (4*1024)
 
@@ -132,9 +135,9 @@ int PhaseScratchCmd(char command);
 */
 int main(int argc, char *argv[])
 {
-  float distancia;
   usleep(10);
   char buffer[BUFFER_SIZE]; 
+ 
   struct sockaddr_in serv_addr, cli_addr;
     struct sigaction sa;
   int  n, pulsenum, count ;
@@ -163,75 +166,253 @@ int main(int argc, char *argv[])
     servoCtrl(servo_1, 1390);
     servoCtrl(servo_2, 1090);
   }
+  sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-  printf("Hola Andres, vamos a hacer pruebas. \r\n");
-  clearFlag();
-  stop();
-  BEEP_OPEN();
-  printf("Conexión establecida.\r\n");
-  //mySoftPwmWrite1(speedVal_1);
-  //mySoftPwmWrite2(speedVal_2);
-  //mySoftPwmWrite3(speedVal_3);
-  //mySoftPwmWrite4(speedVal_4);
-
-  sleep(0.5);
-    GRB_work(3, getColour, getBrightness);
-    printf("Prueba pruebas. \n");
-    
-  while(1){
-    
-    //distancia = disMeasure();
-    //printf("Hola\n");
-    /*
-    ySoftPwmWrite1(speedVal_1);
-    mySoftPwmWrite2(speedVal_2);
-    mySoftPwmWrite3(speedVal_3);
-    mySoftPwmWmrite4(speedVal_4);
-    if(distancia <  7.0 ){
-      printf("Hay objeto! \n");
-      beepWarning();      
-      stop();
-    }else{
-      printf("Avanza \n");
-      go_forward();
-    }
-    */
+  if (sockfd < 0) {
+    perror("ERROR opening socket");
+    exit(1);
   }
-  ControllerShutdown();
+  /* Initialize socket structure */
+  bzero((char *) &serv_addr, sizeof(serv_addr));
+  portno = 2001;
+  serv_addr.sin_family = AF_INET;
+  serv_addr.sin_addr.s_addr = INADDR_ANY;
+  serv_addr.sin_port = htons(portno);
 
+  /*Add support port reuse*/
+    if ((setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on))) < 0)
+    {
+      perror("setsockopt failed");
+      exit(EXIT_FAILURE);
+    }
+    /* Now bind the host address using bind() call.*/
+    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+      perror("ERROR on binding");
+      exit(1);
+    }
+ 
+    /* Add support reconnection */
+  sa.sa_handler = SIG_IGN;
+  sigaction( SIGPIPE, &sa, 0 );
+  /* Now start listening for the clients, here process will
+    go in sleep mode and will wait for the incoming connection
+  */
+  while (1) {
+    listen(sockfd, 5);
+    clilen = sizeof(cli_addr);
+    printf("Hola Andres, esperando conexión. \r\n");
+    client_Connected = 0;
+    clearFlag();
+    stop();
+    BEEP_OPEN();
+    /* Accept actual connection from the client */
+    newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, (void *) &clilen);
+    if (newsockfd < 0) {
+      perror("ERROR on accept");
+      //exit(1);
+    }
+    /* If connection is established then start communicating */
+    printf("Conexión establecida.\r\n");
 
+    sleep(0.5);
+    GRB_work(3, getColour, getBrightness);
+    n = write(newsockfd, "{\"version\":2}", 13);
+    client_Connected = 1;
+    sleep(0.001);
+    bzero(&buffer, BUFFER_SIZE);
+    while ((n = read(newsockfd, &buffer, BUFFER_SIZE)) > 0)
+    {
+      //Para analizar el buffer
+      printf("Buffer: ");
+      for (int i=0; i < 10; i++){
+          printf("%d",buffer[i]) ;
+      }
+      printf("\n");
+      printf("n: %d", n);
+      //Para analizar el buffer
+      if (buffer[0] == 's') { //0x73
+        baseSpeed = buffer[1];
+        addLeftSpeed = buffer[2];
+        addRightSpeed = buffer[3];
+        speedVal_1 = 10000 * ((buffer[1] + buffer[2]) / 255.0);
+        speedVal_3 = 10000 * ((buffer[1] + buffer[2]) / 255.0);
+
+        speedVal_2 = 10000 * ((buffer[1] + buffer[3]) / 255.0);
+        speedVal_4 = 10000 * ((buffer[1] + buffer[3]) / 255.0);
+
+      } else if (buffer[0] == 'c') { //0x63
+        getColour = (buffer[1] << 16) | (buffer[2] << 8) | buffer[3];
+        getBrightness = buffer[4];
+        GRB_work(3, getColour, getBrightness);
+		if(readNowTime){
+			readNowTime = 0;
+			previous_time = get_pwm_timestamp();	
+		}	
+	  now_time = get_pwm_timestamp();
+      time_stamp = now_time - previous_time;
+      if (time_stamp <2000000) {
+		   printf("set current direction\r\n");
+		  receive_colour_table[getColIndex] = getColour;
+      }else{
+		  readNowTime = 1;
+		  printf("set next direction\r\n");
+		  getColIndex = (1+getColIndex)%4;
+		  receive_colour_table[getColIndex] = getColour;
+		  previous_time = get_pwm_timestamp();
+	  }  
+		
+      } else if (buffer[0] == 'v') {
+        printf("Reveive value %d\n", buffer[0]);
+        write(newsockfd, "{\"version\":2}", 13);
+      }
+      else {
+	  	for(count = 0; count <n; count ++){
+			printf("receive data %d\r\n",buffer[count]);
+		}
+    //Se agrega para recibir la distancia
+    if(buffer[0]=='d'){
+      carstate.distancia=1;
+      /*
+      buffer_enviar[0] = (int) dis;
+      send(newsockfd , buffer_enviar , 1 , 0 );
+      printf("Va la distancia %d\n", buffer_enviar[0]);
+      */
+    }
+	  if(buffer[0]==0xFF && buffer[1] == 0x55){
+				for (count = 2; count < n; count ++) {
+					 PhaseScratchCmd(buffer[count]);
+					}
+		}else{
+			for (count = 0; count < n; count ++) {
+					  updateCarState(buffer[count]);
+					  updateCarMotion();
+					}
+		}
+      }
+      bzero(&buffer, BUFFER_SIZE);
+    }
+    stop();
+    clearFlag();
+    if (n < 0) {
+      printf("Connection exception!\n");
+      //break;
+    }
+  }
+  client_Connected = 0;
+  close(sockfd);
+  printf("ERROR\r\n");
   return 0;
 }
 
 void *fun1(void *arg) {
-  unsigned char cnt = 0;
-  float dis = 0, temp_min = 0, temp_max = 0, temp_value = 0, temp = 0;
-  int num1 = 0, num2 = 0, num3 = 0;
+  //unsigned char cnt = 0;
+  //float dis = 0, temp_min = 0, temp_max = 0, temp_value = 0, temp = 0;
+  //int num1 = 0, num2 = 0, num3 = 0;
   while (1) {
     usleep(1);
     dis = disMeasure();
-    printf("Distancia al objeto : %f \n", dis);
-    
+     /*
     num1 = GET_GPIO(leftSensor);
     num2 = GET_GPIO(middleSensor);
     num3 = GET_GPIO(rightSensor);
 
-    printf("Izq: %d, Medio: %d, Der: %d \n ", num1, num2, num3);
+    printf("Izq: %d, Medio: %d, Der: %d \n ", num1, num2, num3);  
+    */
+    if(carstate.distancia){
+      buffer_enviar[0] = (int) dis;
+      send(newsockfd , buffer_enviar , 1 , 0 );
+      printf("Va la distancia %d\n", buffer_enviar[0]);
+      carstate.distancia = 0;
+    }
+    //buffer_enviar[0] = (int) dis;
+    //send(newsockfd , buffer_enviar , 1 , 0 );
+    /*
+    temp_min  = temp_max;
+    temp_value = temp_max;
+    for (cnt = 0; cnt < 3; cnt ++ ) {
+      temp = disMeasure(); usleep(1);
+      if (temp_max < temp) temp_max = temp;
+      if (temp_min > temp) temp_min = temp;
+      temp_value += temp;
+    }
+    dis = (temp_value - temp_max - temp_min);
+    temp_value = 0; temp_min = 0; temp_max = 0; temp_value = 0; temp = 0;
+    */
+    /*Se Ajusta para probar la distancia  valores originales 0 y 50 */
+    if (dis <= 20) {
+      GRB_work(3, receive_colour_table[1], getBrightness);
+      disWarning = 1;
+      /*
+      if(disWarning == 0){
+        buffer_enviar[0] = 1;
+        send(newsockfd , buffer_enviar , 1 , 0 );
+        
+      }
+      */
+      //Se agrega para enviar objeto
+      //buffer_enviar[0] = (int) dis;
+     
+      /*
+      if (carstate.forward) {
+        if (!(carstate.autoAvoid)) {
+          stop();
+        }
+      }
+      */
+    } else{
+      /*
+      if(disWarning == 1){
+        buffer_enviar[0] = 0;
+        send(newsockfd , buffer_enviar , 1 , 0 );
+       
+      }
+      */
+       disWarning = 0;
+      //Se agrega para saber si hay objeto
+      //buffer_enviar[0] = (int) dis;
+    } 
+
+    if (!poweroffFlag) {
+      beepWarning();
+    }
+	if(servoBeep){
+		servoBeep = 0;
+		digitalWrite(BEEP, HIGH);
+		delay(100);
+		digitalWrite(BEEP, LOW);
+	}
+	
 
   }
 }
 
 void *fun2(void *arg) {
-  //int IRVal = 0;
+  int IRVal = 0;
   while (1) {
-    //printf("Estoy en fun2 \n"); 
+    //printf("Estoy en fun2"); 
     usleep(1);
-    
-    if (carstate.autoAvoid) {
-      reconocimiento();
+    if (carstate.trackenable) {
+      printf("Come in track mode \n");
+      trackModeWork();
     }
-
+    if (carstate.autoAvoid) {
+      avoidance();
+    }
+    if (done == 1) {
+      done = 0;
+      IRVal = buf[2]; IRVal = IRVal << 8;
+      IRVal = IRVal | buf[3];
+      IR_updateCarState(IRVal);
+      IR_updateCarMotion();
+      IRVal = 0;
+    }
+    mySoftPwmWrite1(speedVal_1);
+    mySoftPwmWrite2(speedVal_2);
+    mySoftPwmWrite3(speedVal_3);
+    mySoftPwmWrite4(speedVal_4);
+    if (!poweroffFlag)  getLedSta();
   }
+
 }
 
 
@@ -279,8 +460,14 @@ int updateCarMotion(void) {
     strcpy(direction, "right");
     go_right();
   } else if( carstate. stop){
-	  carstate. stop = 0;
+	  carstate.stop = 0;
 	  stop();
+  } else if( carstate.forwardleft ){ //Se agrega estado
+    strcpy(direction, "forward left");
+    go_forward_left();
+  } else if (carstate.forwardright){ //Se agrega estado
+    strcpy(direction, "forward right");
+    go_forward_right();
   }
 
   
@@ -338,13 +525,16 @@ void  clearFlag(void) {
   carstate.right = 0;
   carstate. stop = 0;
   carstate. back = 0;
+  carstate.forwardleft = 0; // Se agrega estado
+  carstate.forwardright = 0; // Se agrega estado
   carstate.servoLeft = 0;
   carstate. servoRight = 0;
   carstate. servoUp = 0;
   carstate. servoDown = 0;
   carstate. speedUp = 0;
   carstate. speedDown = 0;
-  carstate. autoAvoid = 1;
+  carstate. autoAvoid = 0;
+  carstate. distancia = 0; // Se agrega estado
 
 }
 
@@ -467,15 +657,121 @@ int IR_updateCarState(int command) {
   }
   return 0;
 }
+
+
+int PhaseScratchCmd(char command){
+	static int angleA = 1140;
+	static int angleB = 630;
+
+	switch (command) {
+    case 1: // go forward
+      go_forward();
+      GRB_work(3, receive_colour_table[2], getBrightness);
+      break;
+    case 2: //go backward
+      if (!disWarning) {
+       	go_back();
+        GRB_work(3, receive_colour_table[0], getBrightness);
+      }
+    else
+		stop();
+	  carstate.trackenable = 0;
+	  carstate.autoAvoid = 0;
+      break;
+    case 3: //go left
+      go_left();
+      GRB_work(3, receive_colour_table[3], getBrightness);
+      carstate.trackenable = 0;
+      carstate.autoAvoid = 0;
+      break;
+    case 4: //go right
+      go_right();
+      GRB_work(3, receive_colour_table[1], getBrightness);
+      carstate.trackenable = 0;
+      carstate.autoAvoid = 0;
+      break;
+    case 5: //stop
+      stop();
+      carstate.trackenable = 0;
+      carstate.autoAvoid = 0;
+      break;
+    case 7: /* servo left */
+       if (angleA < 2300)
+      	angleA = angleA + 50;
+   	   else
+      	 angleA = 2300;
+       servoCtrl(servo_1,  angleA);
+     break;
+    case 8: /*servo right */
+      if (angleA > 300)
+      angleA = angleA - 50;
+     else
+      angleA = 300;
+     servoCtrl(servo_1,  angleA);
+     break;
+    case 9: /* servo up */
+      if (angleB > 300)
+      	angleB = angleB - 50;
+      else
+      	angleB = 300;
+      servoCtrl(servo_2,  angleB);
+    break;
+    case 10: /* servo down */
+     if (angleB < 1160)
+      	angleB = angleB + 50;
+     else
+      angleB = 1160;
+     servoCtrl(servo_2,  angleB);
+    break;
+    case 11: /* enable track */
+      carstate.trackenable = 1;
+      break;
+    case 12: /* disable track */
+      carstate.trackenable = 0;
+      break;
+    case 13: 
+      carstate.speedUp = 1;
+      break;
+    case 14: 
+      carstate.speedDown = 1;
+      break;
+    case 15: /* disable track */
+      digitalWrite(BEEP, HIGH);
+      break;
+    case 16: /* disable track */
+      digitalWrite(BEEP, LOW);
+      break;
+    case 17: /*automatic avoidance*/
+      carstate.autoAvoid = 1;
+      break;
+    case 18: /*stop automatic avoidance*/
+      carstate.autoAvoid = 0;
+      break;
+    case 19: /*turn off the robot car*/
+      poweroffFlag = 1;
+      exit_UCTRONICS_Robot_Car();
+      printf("power off\n");
+      system("sudo poweroff");
+      break;
+  }
+  return 0;
+}
+
 /* Updates the struct MotionState of the car.
 */
 int updateCarState(char command) {
+  printf("Estoy en UpdateCarstate \n");
   switch (command) {
     case 0: /* left */
       carstate.left = 1;
       GRB_work(3, receive_colour_table[2], getBrightness);
       break;
     case 1: /* up */
+    GRB_work(3, receive_colour_table[0], getBrightness);
+    carstate.forward = 1;
+	  carstate.trackenable = 0;
+	  carstate.autoAvoid = 0;
+    /*
       if (!disWarning) {
         carstate.forward = 1;
         GRB_work(3, receive_colour_table[0], getBrightness);
@@ -484,6 +780,7 @@ int updateCarState(char command) {
       carstate.forward = 0;
 	  carstate.trackenable = 0;
 	  carstate.autoAvoid = 0;
+    */
       break;
     case 2: /* right */
       carstate.right = 1;
@@ -505,11 +802,13 @@ int updateCarState(char command) {
     case 5: /* stop*/
       carstate.forward = 0;
       carstate.back = 0;
-	  carstate.left = 0;
-	  carstate.right = 0;
+	    carstate.left = 0;
+	    carstate.right = 0;
+      carstate.forwardleft = 0;
+      carstate.forwardright = 0;
       carstate.trackenable = 0;
       carstate.autoAvoid = 0;
-	  carstate. stop = 1;
+	    carstate.stop = 1;
       break;
     case 6: /* stop right */
       carstate.right = 0;
@@ -555,12 +854,19 @@ int updateCarState(char command) {
       carstate.autoAvoid = 0;
       break;
     case 19: /*turn off the robot car*/
-      poweroffFlag = 1;
-      exit_UCTRONICS_Robot_Car();
-      printf("power off\n");
-      system("sudo poweroff");
+      //poweroffFlag = 1;
+      //exit_UCTRONICS_Robot_Car();
+      //printf("power off\n");
+      //system("sudo poweroff");
 
       break;
+    case 20: /* Se agrega caso - Avanza y gira izquierda a la vez*/
+      carstate.forwardleft = 1;
+    break;
+    case 21: /* Se agrega caso - Avanza y gira derecha a la vez*/
+      carstate.forwardright = 1;
+    break;
+
   }
   return 0;
 }
@@ -685,6 +991,77 @@ void beepWarning() {
   }
 }
 
+void trackModeWork() {
+  int num1 = 0, num2 = 0, num3 = 0;
+  while (1) {
+    if (!(carstate.trackenable))break;
+
+    mySoftPwmWrite1(speedVal_1);
+    mySoftPwmWrite2(speedVal_2);
+    mySoftPwmWrite3(speedVal_3);
+    mySoftPwmWrite4(speedVal_4);
+
+
+    num1 = GET_GPIO(leftSensor);
+    num2 = GET_GPIO(middleSensor);
+    num3 = GET_GPIO(rightSensor);
+    if ((num2 == 0) && (num1 == 0) && (num3 == 0)) {
+      stop(); continue;
+    } else if ( (num1 == 0) && num3) { //go to right
+			GRB_work(3, grb_colour_table[0], 100 ) ;
+      go_forward_left();
+      while (1) {
+		  GRB_work(3, grb_colour_table[0], 100 ) ;
+        num2 = GET_GPIO(middleSensor);
+        mySoftPwmWrite1(speedVal_1);
+        mySoftPwmWrite2(speedVal_2);
+        mySoftPwmWrite3(speedVal_3);
+        mySoftPwmWrite4(speedVal_4);
+        if (num2) {
+          if (!(carstate.trackenable))break;
+          if (disWarning) {
+            stop();
+          }
+          else {
+			  GRB_work(3, grb_colour_table[1], 100 ) ;
+            go_forward_left();
+          }
+          continue;
+        } else
+          break;
+      }
+    } else if ((num3 == 0) && num1) { // go to left
+      go_forward_right();
+      while (1) {
+        num2 = GET_GPIO(middleSensor);
+        mySoftPwmWrite1(speedVal_1);
+        mySoftPwmWrite2(speedVal_2);
+        mySoftPwmWrite3(speedVal_3);
+        mySoftPwmWrite4(speedVal_4);
+        if (num2) {
+          if (!(carstate.trackenable))break;
+          if (disWarning) {
+            stop();
+          }
+          else {
+			  GRB_work(3, grb_colour_table[2], 100 ) ;
+            go_forward_right();
+          }
+          continue;
+        } else
+          break;
+      }
+    } else if (disWarning) {
+      stop();
+    }
+    else {
+      go_forward();
+    }
+
+  }
+
+}
+
 unsigned char countLow(void)
 {
   unsigned char i = 0;
@@ -718,55 +1095,6 @@ void getIR() {
   }
   done = 1;
 }
-
-
-void Avanza(){
-  static unsigned long previous_time = 0;
-  static unsigned long now_time = 0;
-  static unsigned long time_stamp = 0;
-  static unsigned char flag5 = 0;
-  if (!flag5) {
-    flag5 = 1;
-    previous_time = get_pwm_timestamp();
-  }
-
-  now_time = get_pwm_timestamp();
-  time_stamp = now_time - previous_time;
-  if (time_stamp > 0 && time_stamp <= forwardTime){
-      printf("Voy a avanzar! \n");
-      go_forward();
-  }
-  if (time_stamp >  forwardTime) {
-      printf("Termine de avanzar \n");
-      stop(); 
-      flag5 = 0;
-      //carstate.forward = 0;
-  }
-
-}
-
-void izquierda_obstaculo(){
-  static unsigned long previous_time = 0;
-  static unsigned long now_time = 0;
-  static unsigned long time_stamp = 0;
-  static unsigned char flag = 0;
-  if (!flag) {
-    flag = 1;
-    previous_time = get_pwm_timestamp();
-  }
-  now_time = get_pwm_timestamp();
-  time_stamp = now_time - previous_time;
-  if (time_stamp > 0 && time_stamp <= turnTime ) { //1/2T
-    go_back();
-  }
-  if (time_stamp > turnTime && time_stamp <= 2 * turnTime ) { //1T
-    go_left();
-  }
-  if (time_stamp > 2 * turnTime) {
-    go_left(); flag = 0;
-  }
-}
-
 void turn() {
   static unsigned long previous_time = 0;
   static unsigned long now_time = 0;
@@ -779,55 +1107,29 @@ void turn() {
   now_time = get_pwm_timestamp();
   time_stamp = now_time - previous_time;
   if (time_stamp > 0 && time_stamp <= turnTime ) { //1/2T
-    go_back();
+    go_back();turnBackFlag = 1;
   }
   if (time_stamp > turnTime && time_stamp <= 2 * turnTime ) { //1T
-    go_left();
+    go_left();turnLeftFlag = 1;
   }
   if (time_stamp > 2 * turnTime) {
-    stop(); flag = 0;
+    stop(); flag = 0;turnLeftFlag = 0;turnBackFlag = 0;
   }
 }
-
-
-void reconocimiento(void)
-{
-  int speed;
-
-  while (1) {
-    speed = 500;
-    mySoftPwmWrite1(speed);
-    mySoftPwmWrite2(speed);
-    mySoftPwmWrite3(speed);
-    mySoftPwmWrite4(speed);
-    if (disWarning) {
-      printf("Evadiendo\n");
-      izquierda_obstaculo();
-    } else {
-      
-
-      printf("Go forward\n");
-      Avanza();
-    }
-  }
-}
-
 
 void avoidance(void)
 {
 
   while (1) {
-    /*
     if (!(carstate.autoAvoid)) {
       stop();
       break;
-    }*/
+    }
     mySoftPwmWrite1(speedVal_1);
     mySoftPwmWrite2(speedVal_2);
     mySoftPwmWrite3(speedVal_3);
     mySoftPwmWrite4(speedVal_4);
     if (disWarning || turnLeftFlag||turnBackFlag) {
-      printf("Evadiendo\n");
       turn();
     } else {
       printf("Go forward\n");
@@ -1134,8 +1436,8 @@ void exit_UCTRONICS_Robot_Car(void)
   client_Connected = 0;
   close(sockfd);
   for (pulsenum = 0; pulsenum < 10; pulsenum++) {
-    servoCtrl(servo_1, 1300);
-    servoCtrl(servo_2, 1300);
+    servoCtrl(servo_1, 1390);
+    servoCtrl(servo_2, 1090);
   }
   digitalWrite(BEEP, LOW);
   GRB_work(3, 0, 0 );

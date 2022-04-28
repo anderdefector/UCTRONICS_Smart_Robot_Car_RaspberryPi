@@ -82,14 +82,15 @@
  		
 #define BUFFER_SIZE 10
 
-#define halfPWMPeriod   500  //5ms
-#define forwardTime		400000
-//#define  turnTime       500000    //500ms
-#define  turnTime         400000    //900ms
+#define halfPWMPeriod   5000  //5ms
+
+#define  turnTime        500000    //500ms
 
 struct motionstate {
         unsigned int left:1;
         unsigned int forward:1;
+		unsigned int forwardleft:1; // Se agrega estado
+		unsigned int forwardright:1; //Se agrega estado
         unsigned int right:1;
         unsigned int back:1;
 		unsigned int servoLeft:1;
@@ -103,6 +104,7 @@ struct motionstate {
 		unsigned int beepenable:1;
 		unsigned int autoAvoid:1;
 		unsigned int stop :1;
+		unsigned int distancia :1; // Se agrega estado
         }; 
 		
 
@@ -134,10 +136,6 @@ void GRB_Set(unsigned char gdat,unsigned char rdat,unsigned char bdat);
 void GRB_MultiColour_work(unsigned int ledNum,  int brightness );
 void setup_io();
 
-void izquierda_obstaculo();
-void Avanza();
-void reconocimiento(void);
-
 void *fun1(void *arg);
 void *fun2(void *arg);
 
@@ -146,10 +144,10 @@ int updateCarMotion(void);
 
 int updateCarState(char command);
 
-void mySoftPwmWrite1( int value , int halfPWMPeriod );
-void mySoftPwmWrite2( int value , int halfPWMPeriod );
-void mySoftPwmWrite3( int value , int halfPWMPeriod);
-void mySoftPwmWrite4( int value, int halfPWMPeriod);
+void mySoftPwmWrite1( int value);
+void mySoftPwmWrite2( int value);
+void mySoftPwmWrite3( int value);
+void mySoftPwmWrite4( int value);
 
 void GRBInit();
 void GRB_work(unsigned int ledNum, unsigned long colour, int brightness );
