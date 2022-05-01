@@ -284,14 +284,20 @@ int main(int argc, char *argv[])
 					 PhaseScratchCmd(buffer[count]);
 					}
 		}else{
-			for (count = 0; count < n; count ++) {
-            if(buffer[0] == 22){
-              ang_d = buffer[1];
-              printf("Se va a mover la cámara el con el siguiente angulo : %d", ang_d );
-            }
+      /*
+        Se agrega esta parte para recibir y manejar un ángulo requerido para mover la cámara
+      */
+      if(buffer[0] == 22){
+        ang_d = buffer[1];
+        printf("Se va a mover la cámara el con el siguiente angulo : %d", ang_d );
+        updateCarState(buffer[0]);
+				updateCarMotion();
+      }else{
+        for (count = 0; count < n; count ++) { 
 					  updateCarState(buffer[count]);
 					  updateCarMotion();
 					}
+      }
 		}
       }
       bzero(&buffer, BUFFER_SIZE);
@@ -476,7 +482,7 @@ int updateCarMotion(void) {
   }else if(carstate.servoMovLat){
     carstate.servoMovLat = 0;
     strcpy(direction, "Moviendo cámara");
-    servoCtrl(servo_1,  angleA);
+    servoCtrl(servo_1,  500);
   }
 
   
@@ -879,7 +885,7 @@ int updateCarState(char command) {
     case 22: /* Se agrega caso - para girar la cámara */
       printf("Vamos a mover la cámara \n");
       printf("ángulo : %d \n", ang_d);    
-      //carstate.servoMovLat = 1;
+      carstate.servoMovLat = 1;
     break;
   }
   return 0;
