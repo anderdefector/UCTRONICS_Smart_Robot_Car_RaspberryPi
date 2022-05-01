@@ -482,7 +482,7 @@ int updateCarMotion(void) {
   }else if(carstate.servoMovLat){
     carstate.servoMovLat = 0;
     strcpy(direction, "Moviendo cámara");
-    servoCtrl(servo_1,  500);
+    servoCtrl(servo_1,  450);
   }
 
   
