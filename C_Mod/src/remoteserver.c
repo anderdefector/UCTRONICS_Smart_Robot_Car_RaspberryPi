@@ -27,6 +27,7 @@
 #include "pwm.h"
 #include "ws2811.h"
 
+int and_d = 0;
 int baseSpeed, addLeftSpeed, addRightSpeed;
 unsigned long getColour = 0xFF0000;
 unsigned int getBrightness = 100;
