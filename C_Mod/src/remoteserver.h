@@ -89,8 +89,6 @@
 struct motionstate {
         unsigned int left:1;
         unsigned int forward:1;
-		unsigned int forwardleft:1; // Se agrega estado
-		unsigned int forwardright:1; //Se agrega estado
         unsigned int right:1;
         unsigned int back:1;
 		unsigned int servoLeft:1;
@@ -105,7 +103,10 @@ struct motionstate {
 		unsigned int autoAvoid:1;
 		unsigned int stop :1;
 		unsigned int distancia :1; // Se agrega estado
-        }; 
+		unsigned int forwardleft:1; // Se agrega estado giro-avanza Izquierda
+		unsigned int forwardright:1; //Se agrega estado giro-avanza Derecha
+		unsigned int servoMovLat :1; //Se agrega estado para girar el servo de la camara
+}; 
 		
 
 void trackModeInit();

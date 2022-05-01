@@ -284,6 +284,10 @@ int main(int argc, char *argv[])
 					}
 		}else{
 			for (count = 0; count < n; count ++) {
+            if(buffer[0] == 22){
+              ang_d = buffer[1];
+              printf("Se va a mover la cámara el con el siguiente angulo : %d", ang_d );
+            }
 					  updateCarState(buffer[count]);
 					  updateCarMotion();
 					}
@@ -468,6 +472,10 @@ int updateCarMotion(void) {
   } else if (carstate.forwardright){ //Se agrega estado
     strcpy(direction, "forward right");
     go_forward_right();
+  }else if(carstate.servoMovLat){
+    carstate.servoMovLat = 0;
+    strcpy(direction, "Moviendo cámara");
+    servoCtrl(servo_1,  angleA);
   }
 
   
@@ -525,8 +533,6 @@ void  clearFlag(void) {
   carstate.right = 0;
   carstate. stop = 0;
   carstate. back = 0;
-  carstate.forwardleft = 0; // Se agrega estado
-  carstate.forwardright = 0; // Se agrega estado
   carstate.servoLeft = 0;
   carstate. servoRight = 0;
   carstate. servoUp = 0;
@@ -534,7 +540,10 @@ void  clearFlag(void) {
   carstate. speedUp = 0;
   carstate. speedDown = 0;
   carstate. autoAvoid = 0;
-  carstate. distancia = 0; // Se agrega estado
+  carstate.forwardleft = 0; // Se agrega estado Giro-avanza Izquierda
+  carstate.forwardright = 0; // Se agrega estado giro-avanza derecha
+  carstate.distancia = 0; // Se agrega estado pide distancia al ultrasonico
+  carstate.servoMovLat = 0; // Se agrega estado para girar servo de la cámara
 
 }
 
@@ -760,7 +769,7 @@ int PhaseScratchCmd(char command){
 /* Updates the struct MotionState of the car.
 */
 int updateCarState(char command) {
-  printf("Estoy en UpdateCarstate \n");
+  printf("Estoy en UpdateCarstate valor recibido %d \n", command);
   switch (command) {
     case 0: /* left */
       carstate.left = 1;
@@ -866,7 +875,11 @@ int updateCarState(char command) {
     case 21: /* Se agrega caso - Avanza y gira derecha a la vez*/
       carstate.forwardright = 1;
     break;
-
+    case 22: /* Se agrega caso - para girar la cámara */
+      printf("Vamos a mover la cámara \n");
+      printf("ángulo : %d \n", ang_d);    
+      //carstate.servoMovLat = 1;
+    break;
   }
   return 0;
 }
