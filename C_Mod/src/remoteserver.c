@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
   pthread_create(&t1, NULL, fun1, NULL);
   pthread_create(&t2, NULL, fun2, NULL);
   for (pulsenum = 0; pulsenum < 10; pulsenum++) {
-    servoCtrl(servo_1, 1440);
+    servoCtrl(servo_1, 1915);
     servoCtrl(servo_2, 1090);
   }
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
