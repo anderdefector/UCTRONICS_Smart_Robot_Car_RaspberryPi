@@ -504,10 +504,10 @@ int updateCarMotion(void) {
   if (carstate.servoRight) {
     carstate.servoRight = 0;
     strcpy(direction, "servo_right");
-    if (angleA > 420)
+    if (angleA > 350)
       angleA = angleA - 10;
     else{  
-	angleA = 420; servoBeep =1;	
+	angleA = 350; servoBeep =1;	
 	}
    servoCtrl(servo_1,  angleA);
     printf("angleA = %d\r\n", angleA);
