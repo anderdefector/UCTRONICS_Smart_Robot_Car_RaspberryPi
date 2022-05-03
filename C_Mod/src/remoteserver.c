@@ -28,6 +28,8 @@
 #include "ws2811.h"
 
 int ang_d = 0;
+int valServo = 1410;
+int signo = 0;
 int baseSpeed, addLeftSpeed, addRightSpeed;
 unsigned long getColour = 0xFF0000;
 unsigned int getBrightness = 100;
@@ -288,7 +290,8 @@ int main(int argc, char *argv[])
         Se agrega esta parte para recibir y manejar un ángulo requerido para mover la cámara
       */
       if(buffer[0] == 22){
-        ang_d = buffer[1];
+        signo = buffer[1];
+        ang_d = buffer[2];
         printf("Se va a mover la cámara el con el siguiente angulo : %d", ang_d );
         updateCarState(buffer[0]);
 				updateCarMotion();
@@ -431,6 +434,7 @@ void *fun2(void *arg) {
 int updateCarMotion(void) {
   static int angleA = 1140;
   static int angleB = 1140;
+  int valServo = 0;
   char direction[16];
   if (carstate.forward && !carstate.back) {
     if ((!carstate.left && !carstate.right) ||
@@ -484,11 +488,14 @@ int updateCarMotion(void) {
     strcpy(direction, "Moviendo cámara");
     if(ang_d == 0){
       valServo = 1410;
+      printf("De frente %d \n", valServo);
     }else if(signo == 0){
       valServo = 1410 - ( (ang_d * 1010) / 90 );
+      printf("Derecha %d \n", valServo);
     }else if(signo == 1){
       valServo = 1410 + ( (ang_d * 1010) / 90 ) ;
     }
+      printf("izquierda %d \n", valServo);
     //400 el 0
     //1410 EL 90
     //2420 el 180
