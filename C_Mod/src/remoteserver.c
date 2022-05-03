@@ -499,7 +499,7 @@ int updateCarMotion(void) {
     //400 el 0
     //1410 EL 90
     //2420 el 180
-    for (pulsenum = 0; pulsenum < 10; pulsenum++) {
+    for (int pulsenum = 0; pulsenum < 10; pulsenum++) {
       servoCtrl(servo_1, valServo);
     }
     printf("Listo \n");
