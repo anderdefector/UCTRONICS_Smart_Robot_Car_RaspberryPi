@@ -500,6 +500,9 @@ int updateCarMotion(void) {
     //1410 EL 90
     //2420 el 180
     servoCtrl(servo_1, valServo);
+    printf("Listo \n");
+    buffer_enviar[0] = 1;
+    send(newsockfd , buffer_enviar , 1 , 0 );
   }
 
   
