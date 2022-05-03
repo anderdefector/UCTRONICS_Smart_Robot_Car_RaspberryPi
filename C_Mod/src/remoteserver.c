@@ -309,7 +309,7 @@ int main(int argc, char *argv[])
     clearFlag();
     if (n < 0) {
       printf("Connection exception!\n");
-      //break;
+      break;
     }
   }
   client_Connected = 0;
@@ -493,9 +493,9 @@ int updateCarMotion(void) {
       valServo = 1410 - ( (ang_d * 1010) / 90 );
       printf("Derecha %d \n", valServo);
     }else if(signo == 1){
+      printf("izquierda %d \n", valServo);
       valServo = 1410 + ( (ang_d * 1010) / 90 ) ;
     }
-      printf("izquierda %d \n", valServo);
     //400 el 0
     //1410 EL 90
     //2420 el 180
