@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
   pthread_create(&t1, NULL, fun1, NULL);
   pthread_create(&t2, NULL, fun2, NULL);
   for (pulsenum = 0; pulsenum < 10; pulsenum++) {
-    servoCtrl(servo_1, 1910);
+    servoCtrl(servo_1, 1410);
     servoCtrl(servo_2, 1090);
   }
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -490,11 +490,11 @@ int updateCarMotion(void) {
       valServo = 1410;
       printf("De frente %d \n", valServo);
     }else if(signo == 0){
-      valServo = 1410 - ( (ang_d * 1010) / 90 );
-      printf("Derecha %d \n", valServo);
-    }else if(signo == 1){
       printf("izquierda %d \n", valServo);
       valServo = 1410 + ( (ang_d * 1010) / 90 ) ;
+    }else if(signo == 1){
+      valServo = 1410 - ( (ang_d * 1010) / 90 );
+      printf("Derecha %d \n", valServo);
     }
     //400 el 0
     //1410 EL 90
