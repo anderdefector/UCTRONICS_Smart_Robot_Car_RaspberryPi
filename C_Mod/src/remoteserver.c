@@ -319,32 +319,39 @@ int main(int argc, char *argv[])
 }
 
 void *fun1(void *arg) {
-  int sum = 0;
-  int j = 0;
   //unsigned char cnt = 0;
   //float dis = 0, temp_min = 0, temp_max = 0, temp_value = 0, temp = 0;
   //int num1 = 0, num2 = 0, num3 = 0;
   while (1) {
     usleep(1);
-    //dis = disMeasure();
-    
+    dis = disMeasure();
+     /*
+    num1 = GET_GPIO(leftSensor);
+    num2 = GET_GPIO(middleSensor);
+    num3 = GET_GPIO(rightSensor);
 
+    printf("Izq: %d, Medio: %d, Der: %d \n ", num1, num2, num3);  
+    */
     if(carstate.distancia){
-      sum = 0;
-      j = 0;
-      for(i=0; i<10; i++){
-        dis = disMeasure();
-          if (dis > 3){
-            sum = sum + (int) dis;
-            j++;
-          }
-      }
-      sum = sum / j;
-      buffer_enviar[0] = sum;
+      buffer_enviar[0] = (int) dis;
       send(newsockfd , buffer_enviar , 1 , 0 );
       printf("Va la distancia %d\n", buffer_enviar[0]);
       carstate.distancia = 0;
     }
+    //buffer_enviar[0] = (int) dis;
+    //send(newsockfd , buffer_enviar , 1 , 0 );
+    /*
+    temp_min  = temp_max;
+    temp_value = temp_max;
+    for (cnt = 0; cnt < 3; cnt ++ ) {
+      temp = disMeasure(); usleep(1);
+      if (temp_max < temp) temp_max = temp;
+      if (temp_min > temp) temp_min = temp;
+      temp_value += temp;
+    }
+    dis = (temp_value - temp_max - temp_min);
+    temp_value = 0; temp_min = 0; temp_max = 0; temp_value = 0; temp = 0;
+    */
     /*Se Ajusta para probar la distancia  valores originales 0 y 50 */
     if (dis <= 20) {
       GRB_work(3, receive_colour_table[1], getBrightness);
